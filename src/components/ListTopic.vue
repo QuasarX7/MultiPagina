@@ -10,16 +10,24 @@
 
 <script>
 import router from "../router";
+import { useStore } from 'vuex';
 export default {
     name : 'ListTopic',
-    props:['name','menu'],
+    props:['name','menu','nameMenuBar'],
     emits: {
         'selected-item' : 'selectedItem'
     },
-    setup(props,context){
+    setup(props){
+        const store = useStore();
+
         function onSelectItem(index){
-            context.emit('selectedItem', index);
             router.push(`/argomento/${props.name}/pagina/${index}`);
+            store.dispatch(
+                'CURRENT_TOPIC', {
+                    name : props.name, 
+                    page : index, 
+                    menu: props.nameMenuBar
+            });
         }
         return {onSelectItem};
     }

@@ -1,6 +1,8 @@
 <template>
-    <transition name="fade" mode="out-in">
+    <transition>
+        <keep-alive>
         <router-view></router-view>
+        </keep-alive>
     </transition>
     <footer>
         <div id="nav">

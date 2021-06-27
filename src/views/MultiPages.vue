@@ -1,17 +1,17 @@
 <template>
-    <nav-menu @selected-topic="onSelectMenu"/>
+    <nav-menu />
 
     <header v-if="titlePage" >
         <h1>{{title}}</h1>
         <h2>{{titlePage}}</h2>
         <nav>
-            <div class="buttonNav"> &lt; </div>
+            <div @click="onPrevious()" class="buttonNav"> &lt; </div>
             <div class="indexPageNav"> pag. {{id_pagina}} </div>
-            <div class="buttonNav"> &gt; </div>
+            <div @click="onNext()" class="buttonNav"> &gt; </div>
         </nav>
     </header>
     <main>
-        <list-topic :name="title" :menu="list" @selected-item="onSelectSubmenu" />
+        <list-topic :name="title" :menu="list" :nameMenuBar="nameItemMenu"  />
         <section v-if="pageFile" class="areaMain">
             <article  class ="page"  v-html="pageFile" />
             <article class ="note" />
@@ -23,8 +23,10 @@
 <script>
 import NavMenu from '../components/NavMenu.vue'
 import ListTopic from '../components/ListTopic.vue'
-import {reactive, toRefs, onMounted} from 'vue'
+import {reactive, toRefs, onMounted, watch} from 'vue'
+import { useStore } from 'vuex';
 import axios from 'axios'
+import router from "../router";
 
 export default {
     name: 'MultiPages',
@@ -37,33 +39,46 @@ export default {
         'list-topic' : ListTopic 
     },
     setup(props) {
+        const store = useStore();
+
         let data = reactive({
             title : '',
             titlePage : '',
             list : [],
             pageFile : null,//< code file
+            nameItemMenu : ''
         });
 
         onMounted(()=>{
-          console.log('props.id_argomento :>> ', props.id_argomento);
-          console.log('props.id_pagina :>> ', props.id_pagina);
+            if(store.getters.file)
+                loadFilePage(store.getters.file);
         });
 
-        function onSelectMenu(infoTopic,index) {
-          data.title = infoTopic['titolo'];
-          data.list = infoTopic['pagine'];
-          if(Array.isArray(data.list)){
-              if(data.list.length){
-                  data.titlePage=data.list[index]["sotto-titolo"];
-                  loadFilePage(data.list[index]["file"]);
-              }
-          }
-        }
+        watch(
+            [
+                () => props.id_argomento,
+                () => props.id_pagina,
+            ],
+            () => {
+                
+                if(store.getters.listPages)
+                    data.list=store.getters.listPages;
 
-        function onSelectSubmenu(index) {
-          data.titlePage=data.list[index]["sotto-titolo"];
-          loadFilePage(data.list[index]["file"]);
-        }
+                if(store.getters.titleMenuBar)
+                    data.nameItemMenu=store.getters.titleMenuBar;
+
+                if(store.getters.title)
+                    data.title=store.getters.title;
+
+                if(store.getters.titlePage)
+                    data.titlePage=store.getters.titlePage;
+
+                if(store.getters.file)
+                    loadFilePage(store.getters.file);
+
+            }
+        );
+
 
         function loadFilePage(file){
             console.log('file :>> ', file);
@@ -75,11 +90,34 @@ export default {
                     }
                 }
             });
-            
+        }
+
+        function onPrevious(){
+            var index = props.id_pagina - 1;
+            if(index >= 0){
+                toNav(index);
+            }
+        }
+
+        function toNav(index){
+            router.push(`/argomento/${data.titlePage}/pagina/${index}`);
+                        
+            store.dispatch('CURRENT_TOPIC', {
+                name : data.titlePage, 
+                page : index,
+                menu : data.nameItemMenu
+            });
+        }
+
+        function onNext(){
+            var index = Number(props.id_pagina) + 1;
+            if(index < data.list.length){
+                toNav(index);
+            }
         }
 
         return{
-            ...toRefs(data), onSelectMenu,onSelectSubmenu
+            ...toRefs(data),onPrevious, onNext
         }
     }
 }
@@ -161,7 +199,6 @@ main{
 
 .page{
     left: 0;
-    display: inline-block;
     display: inline-block;
     background: rgb(80, 80, 79);
     height: 50%;
