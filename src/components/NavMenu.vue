@@ -38,7 +38,6 @@ export default {
     },
     setup() {
         const store = useStore();
-        console.log('store :>> ', store);
 
         let data = reactive({
             dataFile: null, //dati grezzi del file di configurazione
@@ -57,7 +56,7 @@ export default {
                 var itemsMenu =String(oData.path).split('>');
                 if(itemsMenu.length){
                     var topic = itemsMenu[itemsMenu.length-1];//titolo menu
-                    router.push(`/argomento/${data.topics[topic]['titolo']}/pagina/0`);
+                    router.push(`/menu/${topic}/argomento/${data.topics[topic]['titolo']}/pagina/0`);
                     
                     store.dispatch('CURRENT_TOPIC', {
                         name : data.topics[topic]['titolo'], 
@@ -75,10 +74,13 @@ export default {
             () => {
                 const file = "argomenti.json";
                 const host = window.location.origin;
+                store.dispatch('START_INIT');
                 axios.get(host+"/"+file).then(response => {
                     if(response){
                         if(response.data){
                             data.dataFile = response.data; 
+                            console.log('file :>> ', file);
+                            store.dispatch('END_INIT');
                         }
                     }
                 });
@@ -160,6 +162,7 @@ export default {
         watch(
             () => data.dataFile,//getter della variabile osservata
             () => {
+                console.log('data.update :>> ', data.update);
                 data.update++;//azione di rendering (:key)
                 createItems(data.dataFile,data.items,"menu",'');
             }

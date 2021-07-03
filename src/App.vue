@@ -1,9 +1,5 @@
 <template>
-    <transition>
-        <keep-alive>
-        <router-view></router-view>
-        </keep-alive>
-    </transition>
+    <router-view></router-view>
     <footer>
         <div id="nav">
             <router-link to="/">Home</router-link> |

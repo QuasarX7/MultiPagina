@@ -8,7 +8,7 @@ const routes = [
         component: MultiPages
     },
     {
-        path: '/argomento/:id_argomento/pagina/:id_pagina',
+        path: '/menu/:id_menu/argomento/:id_argomento/pagina/:id_pagina',
         name: 'Argomento',
         component: MultiPages,
         props: true,

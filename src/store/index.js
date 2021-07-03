@@ -5,9 +5,13 @@ const storeConfig = {
         dataTopic: [],
         currentTopic: '',
         currentPage: 0,
-        currentMenu: ''
+        currentMenu: '',
+        load: true
     },
     mutations: {
+        SET_LOAD(state, value) {
+            state.load = value;
+        },
         SET_TOPIC(state,data) {
             state.dataTopic[data.key] = data.infoPages;
         },
@@ -23,6 +27,14 @@ const storeConfig = {
     },
     // update
     actions: {
+        START_INIT({ commit }) {
+            commit('SET_LOAD', true);
+        },
+
+        END_INIT({ commit }) {
+            commit('SET_LOAD', false);
+        },
+        
         SAVE_DATA_FILES_TOPIC({ commit }, topic) {
             commit('SET_TOPIC', topic);
         },
@@ -35,6 +47,9 @@ const storeConfig = {
     },
     // get
     getters: {
+        isBuild(state) {
+            return state.load;
+        },
         titleMenuBar(state) {
             return state.currentMenu;
         },
@@ -51,21 +66,21 @@ const storeConfig = {
             try {
                 return state.dataTopic[state.currentMenu]['pagine'];
             } catch (e) {
-               console.log('e :>> ', e);
+                e;
             }
         },
         file(state) {
             try {
                 return state.dataTopic[state.currentMenu]['pagine'][state.currentPage]["file"];
             } catch (e) {
-               console.log('e :>> ', e);
+                console.log('e---- :>> ', e);
             }
         },
         titlePage(state) {
             try {
                 return state.dataTopic[state.currentMenu]['pagine'][state.currentPage]["sotto-titolo"];
             } catch (e) {
-               console.log('e :>> ', e);
+                e;
             }
         }
 
@@ -74,6 +89,8 @@ const storeConfig = {
     modules: {
         // codice per modules
     },
+
 };
+
 
 export default createStore(storeConfig);

@@ -23,7 +23,7 @@
 <script>
 import NavMenu from '../components/NavMenu.vue'
 import ListTopic from '../components/ListTopic.vue'
-import {reactive, toRefs, onMounted, watch} from 'vue'
+import {reactive, toRefs, onMounted,  watch} from 'vue'
 import { useStore } from 'vuex';
 import axios from 'axios'
 import router from "../router";
@@ -31,6 +31,7 @@ import router from "../router";
 export default {
     name: 'MultiPages',
     props:[
+      'id_menu',
       'id_argomento',
       'id_pagina'
     ],
@@ -49,18 +50,44 @@ export default {
             nameItemMenu : ''
         });
 
-        onMounted(()=>{
-            if(store.getters.file)
-                loadFilePage(store.getters.file);
+        onMounted(() => {
+            if(store.getters.isBuild){
+                setTimeout(function() {
+                    store.dispatch('CURRENT_TOPIC', {
+                        name : props.id_argomento, 
+                        page : props.id_pagina,
+                        menu : props.id_menu
+                    });
+                    init();
+                },2000);
+                
+            }
+            
+            
         });
 
+
+        
+        /**
+         * All'aggiornamento della pagina al variare dello stato della props 'id_argomento' o 'id_pagina'
+         */
         watch(
             [
                 () => props.id_argomento,
                 () => props.id_pagina,
+                () => props.id_menu,
             ],
             () => {
+                init();
+            }
+        );
+
+        function init(){
+            console.log('props.id_argomento :>> ', props.id_argomento);
+                console.log('props.id_pagina :>> ', props.id_pagina);
+                console.log('props.id_menu :>> ', props.id_menu);
                 
+
                 if(store.getters.listPages)
                     data.list=store.getters.listPages;
 
@@ -69,15 +96,16 @@ export default {
 
                 if(store.getters.title)
                     data.title=store.getters.title;
-
+        console.log('store.getters.titlePage :>> ', store.getters.titlePage);
                 if(store.getters.titlePage)
                     data.titlePage=store.getters.titlePage;
 
+console.log('store.getters.file :>> ', store.getters.file);
                 if(store.getters.file)
                     loadFilePage(store.getters.file);
+        }
 
-            }
-        );
+        
 
 
         function loadFilePage(file){
@@ -100,7 +128,7 @@ export default {
         }
 
         function toNav(index){
-            router.push(`/argomento/${data.titlePage}/pagina/${index}`);
+            router.push(`/menu/${data.nameItemMenu}/argomento/${data.titlePage}/pagina/${index}`);
                         
             store.dispatch('CURRENT_TOPIC', {
                 name : data.titlePage, 
@@ -197,12 +225,31 @@ main{
     border: gray solid 1px;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Gruppo&display=swap');
+
 .page{
     left: 0;
     display: inline-block;
-    background: rgb(80, 80, 79);
+    background: rgb(255, 255, 255);
     height: 50%;
     width: 70rem;
+    font-family: 'Gruppo', cursive;
+    font-size: 1.5rem;
+    text-align: justify;
+    padding: 1rem;
+}
+.page img{
+    margin: 1rem;
+    float: left;
+}
+.page a{
+    text-decoration:none;
+    color: rgb(97, 97, 219);
+    font-weight: bold;
+}
+.page a:hover{
+    text-decoration:none;
+    color: orangered;
 }
 .note{
     right: 0;

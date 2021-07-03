@@ -21,7 +21,7 @@ export default {
         const store = useStore();
 
         function onSelectItem(index){
-            router.push(`/argomento/${props.name}/pagina/${index}`);
+            router.push(`/menu/${props.nameMenuBar}/argomento/${props.name}/pagina/${index}`);
             store.dispatch(
                 'CURRENT_TOPIC', {
                     name : props.name, 
