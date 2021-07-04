@@ -73,7 +73,7 @@ const storeConfig = {
             try {
                 return state.dataTopic[state.currentMenu]['pagine'][state.currentPage]["file"];
             } catch (e) {
-                console.log('e---- :>> ', e);
+                e;
             }
         },
         titlePage(state) {

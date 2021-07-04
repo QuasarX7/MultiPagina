@@ -1,20 +1,34 @@
 <template>
-    <nav-menu />
-
+    <nav-menu id="navMenu" v-if="window.dy <= 0" />
     <header v-if="titlePage" >
         <h1>{{title}}</h1>
         <h2>{{titlePage}}</h2>
         <nav>
-            <div @click="onPrevious()" class="buttonNav"> &lt; </div>
+            <div v-if="id_pagina > 0" @click="onFirst()" class="buttonNav">⏮</div>
+            <div v-else class="buttonNav" />
+
+            <div v-if="id_pagina > 0" @click="onPrevious()" class="buttonNav">⏴</div>
+            <div v-else class="buttonNav" />
+
             <div class="indexPageNav"> pag. {{id_pagina}} </div>
-            <div @click="onNext()" class="buttonNav"> &gt; </div>
+
+            <div v-if="id_pagina < list.length-1" @click="onNext()" class="buttonNav"> ⏵ </div>
+            <div v-else class="buttonNav" />
+
+            <div v-if="id_pagina < list.length-1" @click="onLast()" class="buttonNav">⏭</div>
+            <div v-else class="buttonNav" />
         </nav>
     </header>
     <main>
-        <list-topic :name="title" :menu="list" :nameMenuBar="nameItemMenu"  />
+        
+        <list-topic v-if="window.width === 0 || window.width > 1024" :name="title" :menu="list" :nameMenuBar="nameItemMenu"  />
+        
         <section v-if="pageFile" class="areaMain">
-            <article  class ="page"  v-html="pageFile" />
-            <article class ="note" />
+            <article  
+                class ="page" 
+                :style="{ width: (window.width ? (window.width <= 1024 ? window.width * 0.9 + 'px' : '57rem') : '57rem')  }"  
+                v-html="pageFile" />
+            <article class ="note" >Ciao mondo</article>
         </section>
     </main>
     
@@ -47,26 +61,49 @@ export default {
             titlePage : '',
             list : [],
             pageFile : null,//< code file
-            nameItemMenu : ''
+            nameItemMenu : '',
+            window : {
+                width : 0,
+                height : 0,
+                x:  0,
+                y:  0,
+                dx: 0,
+                dy: 0
+
+            }
         });
+
 
         onMounted(() => {
-            if(store.getters.isBuild){
-                setTimeout(function() {
-                    store.dispatch('CURRENT_TOPIC', {
-                        name : props.id_argomento, 
-                        page : props.id_pagina,
-                        menu : props.id_menu
-                    });
-                    init();
-                },2000);
-                
-            }
-            
-            
+            window.addEventListener('resize', ()=>{
+                data.window.width = window.innerWidth;
+                data.window.height = window.innerHeight;
+            });
+
+            window.addEventListener('scroll',() =>{
+                data.window.dx = window.scrollX - data.window.x;
+                data.window.dy = window.scrollY - data.window.y;
+                data.window.x= window.scrollX;
+                data.window.y= window.scrollY;
+            });
+           
         });
 
-
+        /**
+         * (fase iniziale) 
+         * Fine caricamento file JSON di configurazione
+         */
+        watch(
+            [() => store.getters.isBuild],
+            () =>{
+                store.dispatch('CURRENT_TOPIC', {
+                    name : props.id_argomento, 
+                    page : props.id_pagina,
+                    menu : props.id_menu
+                });
+                init();
+            }
+        );
         
         /**
          * All'aggiornamento della pagina al variare dello stato della props 'id_argomento' o 'id_pagina'
@@ -82,34 +119,32 @@ export default {
             }
         );
 
+        
+        /**
+         * Inizializza e caricamento della pagina
+         */
         function init(){
-            console.log('props.id_argomento :>> ', props.id_argomento);
-                console.log('props.id_pagina :>> ', props.id_pagina);
-                console.log('props.id_menu :>> ', props.id_menu);
-                
+            
+            if(store.getters.listPages)
+                data.list=store.getters.listPages;
 
-                if(store.getters.listPages)
-                    data.list=store.getters.listPages;
+            if(store.getters.titleMenuBar)
+                data.nameItemMenu=store.getters.titleMenuBar;
 
-                if(store.getters.titleMenuBar)
-                    data.nameItemMenu=store.getters.titleMenuBar;
+            if(store.getters.title)
+                data.title=store.getters.title;
+    
+            if(store.getters.titlePage)
+                data.titlePage=store.getters.titlePage;
 
-                if(store.getters.title)
-                    data.title=store.getters.title;
-        console.log('store.getters.titlePage :>> ', store.getters.titlePage);
-                if(store.getters.titlePage)
-                    data.titlePage=store.getters.titlePage;
-
-console.log('store.getters.file :>> ', store.getters.file);
-                if(store.getters.file)
-                    loadFilePage(store.getters.file);
+            if(store.getters.file)
+                loadFilePage(store.getters.file);
         }
 
-        
-
-
+        /**
+         * Carica file di pagina
+         */
         function loadFilePage(file){
-            console.log('file :>> ', file);
             const host = window.location.origin;
             axios.get(host+"/"+file).then(response => {
                 if(response){
@@ -128,8 +163,9 @@ console.log('store.getters.file :>> ', store.getters.file);
         }
 
         function toNav(index){
+            var audio = new Audio("/sonar.ogg");
+            audio.play();
             router.push(`/menu/${data.nameItemMenu}/argomento/${data.titlePage}/pagina/${index}`);
-                        
             store.dispatch('CURRENT_TOPIC', {
                 name : data.titlePage, 
                 page : index,
@@ -144,8 +180,16 @@ console.log('store.getters.file :>> ', store.getters.file);
             }
         }
 
+        function onFirst(){
+                toNav(0);
+        }
+
+        function onLast(){
+                toNav(data.list.length-1);
+        }
+
         return{
-            ...toRefs(data),onPrevious, onNext
+            ...toRefs(data),onPrevious, onNext, onFirst,onLast
         }
     }
 }
@@ -164,13 +208,10 @@ console.log('store.getters.file :>> ', store.getters.file);
     margin-top: 60px;
 }
 
-h1{
-    font-family: 'Geostar', cursive;
-    color: rgb(95, 107, 106);
-    font-size: 3rem;
-}
+
 
 h1{
+    display: block;
     font-family: 'Geostar Fill', cursive;
     color: rgb(64, 16, 141);
     font-size: 3rem;
@@ -206,12 +247,18 @@ main{
 }
 .buttonNav{
     display: inline-block;
-    width: 5rem;
-    font-size: 4rem;
+    width: 4rem;
+    height: 4rem;
+    font-size: 3rem;
     cursor: pointer;
+    padding: 0;
+    vertical-align: top;
+    
 }
 .buttonNav:hover{
     color:aqua;
+    border: 1px solid aqua;
+    
 }
 .buttonNav:active{
     color:red;
@@ -222,7 +269,10 @@ main{
     min-width: 11rem;
     height: 3.5rem;
     font-size: 2rem;
-    border: gray solid 1px;
+    border: gray solid 2px;
+    margin: 0.4rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Gruppo&display=swap');
@@ -252,11 +302,55 @@ main{
     color: orangered;
 }
 .note{
+    margin: 3px;
+    padding: 5px;
+    left: auto;
     right: 0;
     display: inline-block;
     background: red;
-    height: 50%;
-    width: 50%;
+    height: 100%;
+    width:auto;
+    vertical-align:top;
+}
+
+/* animazione */
+
+#navMenu {
+    font-family: 'Orbitron', sans-serif;
+    animation-duration: 0.6s;
+    animation-name: slidein;
+    animation-iteration-count:initial;
+    animation-direction: normal;
+}
+
+@keyframes slidein {
+  from {
+    opacity: 0;
+  }
+
+  25%{
+    opacity: 0.5;
+  }
+
+  50%{
+    opacity: 0.7;
+  }
+
+ 75%{
+    opacity: 0.9;
+  }
+
+  to {
+   opacity: 1;
+  }
+}
+
+/* */
+.menu-bar-container[data-v-4a501398].top, .menu-bar-container[data-v-4a501398].bottom {
+    height: 3.5rem;
+    width: 100%;
+    align-items: center;
+    left: 0;
 }
 
 </style>
