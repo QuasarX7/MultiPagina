@@ -11,7 +11,11 @@
       textColor: 'aqua',
       textHoverColor: '#fc7a00c7',
     }"
-  />
+  >
+  <template #link-icon>
+    <font-awesome-icon icon="jedi" size="lg" />
+  </template>
+  </DockMenu>
 </template>
 
 <script>
@@ -80,7 +84,6 @@ export default {
                     if(response){
                         if(response.data){
                             data.dataFile = response.data; 
-                            console.log('file :>> ', file);
                             store.dispatch('END_INIT');
                         }
                     }
@@ -106,6 +109,9 @@ export default {
                             // crea sotto-menu
                             item['menu'] = [];
                             createItems(row,item['menu'],"contenuto");
+                        }else{
+                            //icona
+                            item["iconSlot"] = "link-icon";
                         }
                         newMenu.push(item); 
                         saveTopic(item.name, row['argomento'])
@@ -163,7 +169,6 @@ export default {
         watch(
             () => data.dataFile,//getter della variabile osservata
             () => {
-                console.log('data.update :>> ', data.update);
                 data.update++;//azione di rendering (:key)
                 createItems(data.dataFile,data.items,"menu",'');
             }

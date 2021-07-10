@@ -4,19 +4,28 @@
         <h1>{{title}}</h1>
         <h2>{{titlePage}}</h2>
         <nav>
-            <div v-if="id_pagina > 0" @click="onFirst()" class="buttonNav">⏮</div>
+            <div v-if="id_pagina > 0" @click="onFirst()" class="buttonNav">
+                <font-awesome-icon icon="angle-double-left"/>
+            </div>
             <div v-else class="buttonNav" />
 
-            <div v-if="id_pagina > 0" @click="onPrevious()" class="buttonNav">⏴</div>
+            <div v-if="id_pagina > 0" @click="onPrevious()" class="buttonNav">
+                <font-awesome-icon icon="angle-left"/>
+            </div>
             <div v-else class="buttonNav" />
 
             <div class="indexPageNav"> pag. {{id_pagina}} </div>
-
-            <div v-if="id_pagina < list.length-1" @click="onNext()" class="buttonNav"> ⏵ </div>
+            
+            <div v-if="id_pagina < list.length-1" @click="onNext()" class="buttonNav">
+                <font-awesome-icon icon="angle-right"/>
+            </div>
             <div v-else class="buttonNav" />
 
-            <div v-if="id_pagina < list.length-1" @click="onLast()" class="buttonNav">⏭</div>
+            <div v-if="id_pagina < list.length-1" @click="onLast()" class="buttonNav">
+                <font-awesome-icon icon="angle-double-right"/>
+            </div>
             <div v-else class="buttonNav" />
+            
         </nav>
     </header>
     <main>
@@ -28,7 +37,10 @@
                 class ="page" 
                 :style="{ width: (window.width ? (window.width <= 1024 ? window.width * 0.9 + 'px' : '57rem') : '57rem')  }"  
                 v-html="pageFile" />
-            <article class ="note" >Ciao mondo</article>
+            <article class ="note" >Attenzione: sito è in fase di costruzione!</article>
+        </section>
+        <section v-else>
+            <img style='height: 100%; width: 100%; object-fit: contain' src="note.jpg" />
         </section>
     </main>
     
@@ -75,6 +87,8 @@ export default {
 
 
         onMounted(() => {
+            data.window.width = window.screenWidth;
+            data.window.height = window.screenHeight;
             window.addEventListener('resize', ()=>{
                 data.window.width = window.innerWidth;
                 data.window.height = window.innerHeight;
@@ -165,9 +179,9 @@ export default {
         function toNav(index){
             var audio = new Audio("/sonar.ogg");
             audio.play();
-            router.push(`/menu/${data.nameItemMenu}/argomento/${data.titlePage}/pagina/${index}`);
+            router.push(`/menu/${data.nameItemMenu}/argomento/${data.title}/pagina/${index}`);
             store.dispatch('CURRENT_TOPIC', {
-                name : data.titlePage, 
+                name : data.title, 
                 page : index,
                 menu : data.nameItemMenu
             });
@@ -257,7 +271,6 @@ main{
 }
 .buttonNav:hover{
     color:aqua;
-    border: 1px solid aqua;
     
 }
 .buttonNav:active{
@@ -289,6 +302,7 @@ main{
     padding: 1rem;
 }
 .page img{
+    max-width: 70%;
     margin: 1rem;
     float: left;
 }
