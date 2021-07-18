@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import MultiPages from "../views/MultiPages.vue";
+import NotFound from "../views/NotFound.vue";
 
 const routes = [
     {
@@ -28,6 +29,18 @@ const routes = [
         component: () =>
             import("../views/Test.vue")
     },
+    // per ogni altro percorso, attiva il componente 'NotFound'
+    {
+        path: "/:allOtherPaths(.*)*",
+        name: "not-found",
+        component: NotFound
+    },
+    {
+        path: "/:allOtherPaths(.*)*",
+        name: "not-found",
+        component: NotFound
+    },
+
 ];
 
 const router = createRouter({
