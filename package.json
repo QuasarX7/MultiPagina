@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/vue-fontawesome": "^3.0.0-4",
@@ -17,6 +18,7 @@
     "vue": "^3.0.0",
     "vue-axios": "^3.2.4",
     "vue-dock-menu": "^1.0.3",
+    "vue-nested-menu": "^1.0.0",
     "vue-router": "^4.0.10",
     "vuex": "^4.0.2"
   },

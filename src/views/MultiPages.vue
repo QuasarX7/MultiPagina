@@ -1,5 +1,7 @@
 <template>
-    <nav-menu id="navMenu" v-if="window.dy <= 0" />
+
+    <nav-menu id="navMenu"  v-if="window.dy <= 0" />
+    
     <header v-if="titlePage" >
         <h1>{{title}}</h1>
         <h2>{{titlePage}}</h2>
@@ -14,7 +16,7 @@
             </div>
             <div v-else class="buttonNav" />
 
-            <div class="indexPageNav"> pag. {{id_pagina}} </div>
+            <div class="indexPageNav"> pag. {{ Number(id_pagina) +1 }} </div>
             
             <div v-if="id_pagina < list.length-1" @click="onNext()" class="buttonNav">
                 <font-awesome-icon icon="angle-right"/>
@@ -30,17 +32,17 @@
     </header>
     <main>
         
-        <list-topic v-if="window.width === 0 || window.width > 1024" :name="title" :menu="list" :nameMenuBar="nameItemMenu"  />
-        
+        <nav class="menuPage">
+            <list-topic :name="title" :menu="list" :nameMenuBar="nameItemMenu"  />
+        </nav>
         <section v-if="pageFile" class="areaMain">
             <article  
-                class ="page" 
-                :style="{ width: (window.width ? (window.width <= 1024 ? window.width * 0.9 + 'px' : '57rem') : '57rem')  }"  
+                class ="page"  
                 v-html="pageFile" />
             <article class ="note" >Attenzione: sito è in fase di costruzione!</article>
         </section>
         <section v-else>
-            <img style='height: 100%; width: 100%; object-fit: contain' src="note.jpg" />
+            <img style='height: 90%; width: 90%; object-fit: contain' src="note.jpg" />
         </section>
     </main>
     
@@ -50,9 +52,12 @@
 import NavMenu from '../components/NavMenu.vue'
 import ListTopic from '../components/ListTopic.vue'
 import {reactive, toRefs, onMounted,  watch} from 'vue'
-import { useStore } from 'vuex';
+import { useStore } from 'vuex'
 import axios from 'axios'
-import router from "../router";
+import router from "../router"
+
+
+
 
 export default {
     name: 'MultiPages',
@@ -63,10 +68,12 @@ export default {
     ],
     components: {
         'nav-menu' : NavMenu,
-        'list-topic' : ListTopic 
+        'list-topic' : ListTopic
     },
     setup(props) {
         const store = useStore();
+
+       
 
         let data = reactive({
             title : '',
@@ -82,7 +89,9 @@ export default {
                 dx: 0,
                 dy: 0
 
-            }
+            },
+
+            
         });
 
 
@@ -99,6 +108,7 @@ export default {
                 data.window.dy = window.scrollY - data.window.y;
                 data.window.x= window.scrollX;
                 data.window.y= window.scrollY;
+                console.log('d :>> ', ', ', data.window.x, data.window.y);
             });
            
         });
@@ -222,111 +232,10 @@ export default {
     margin-top: 60px;
 }
 
-
-
-h1{
-    display: block;
-    font-family: 'Geostar Fill', cursive;
-    color: rgb(64, 16, 141);
-    font-size: 3rem;
-}
-header{
-    position: relative;
-}
-header nav{
-    display: block;
-    width: auto;
-    text-align: center; 
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
-}
-
-main{
-    display: inline-block;
-    width: 100%;
-    height: auto;
-    text-align: left; 
-}
-
-.areaMain{
-    display: inline-block;
-    width: calc(100% - 17rem);
-    vertical-align: top;
+body{
     margin: 0;
-    top: 0;
-    clear: both;
-}
-.buttonNav{
-    display: inline-block;
-    width: 4rem;
-    height: 4rem;
-    font-size: 3rem;
-    cursor: pointer;
     padding: 0;
-    vertical-align: top;
-    
 }
-.buttonNav:hover{
-    color:aqua;
-    
-}
-.buttonNav:active{
-    color:red;
-}
-.indexPageNav{
-    vertical-align: top;
-    display: inline-block;
-    min-width: 11rem;
-    height: 3.5rem;
-    font-size: 2rem;
-    border: gray solid 2px;
-    margin: 0.4rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Gruppo&display=swap');
-
-.page{
-    left: 0;
-    display: inline-block;
-    background: rgb(255, 255, 255);
-    height: 50%;
-    width: 70rem;
-    font-family: 'Gruppo', cursive;
-    font-size: 1.5rem;
-    text-align: justify;
-    padding: 1rem;
-}
-.page img{
-    max-width: 70%;
-    margin: 1rem;
-    float: left;
-}
-.page a{
-    text-decoration:none;
-    color: rgb(97, 97, 219);
-    font-weight: bold;
-}
-.page a:hover{
-    text-decoration:none;
-    color: orangered;
-}
-.note{
-    margin: 3px;
-    padding: 5px;
-    left: auto;
-    right: 0;
-    display: inline-block;
-    background: red;
-    height: 100%;
-    width:auto;
-    vertical-align:top;
-}
-
 /* animazione */
 
 #navMenu {
@@ -335,6 +244,10 @@ main{
     animation-name: slidein;
     animation-iteration-count:initial;
     animation-direction: normal;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0px 5px 5px gray;
 }
 
 @keyframes slidein {
@@ -366,5 +279,350 @@ main{
     align-items: center;
     left: 0;
 }
+
+h2{
+    text-shadow: 0 0 3px rgb(0, 255, 242);
+    color: rgb(8, 0, 126);
+    font-size: 2.5rem;
+}
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Gruppo&display=swap');
+
+
+/* stili */
+@import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
+.tecnico{
+    font-family: 'Michroma', sans-serif;
+}
+
+.contenuto-centrato{
+    position: relative;
+    margin: auto;
+    float: none;
+    width: 100%;
+}
+.contenuto-centrato .img-centrata{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/*------------------------------------------------- Desktop -----------------------------------------*/
+@media only screen and (min-width:769px){
+
+    nav.menuPage{
+        display: inline;
+    }
+
+    h1{
+        display: block;
+        font-family: 'Geostar Fill', cursive;
+        color: rgb(64, 16, 141);
+        font-size: 3rem;
+    }
+    header{
+        position: relative;
+    }
+    header nav{
+        display: block;
+        width: auto;
+        text-align: center; 
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin: auto;
+    }
+
+    main{
+        display: inline-block;
+        width: 100%;
+        height: auto;
+        text-align: left; 
+    }
+
+    .areaMain{
+        display: inline-block;
+        width: calc(100% - 20rem);
+        vertical-align: top;
+        margin: 0;
+        top: 0;
+        clear: both;
+    }
+    .buttonNav{
+        display: inline-block;
+        width: 4rem;
+        height: 4rem;
+        font-size: 3rem;
+        cursor: pointer;
+        padding: 0;
+        vertical-align: top;
+        
+    }
+    .buttonNav:hover{
+        color:aqua;
+        
+    }
+    .buttonNav:active{
+        color:red;
+    }
+    .indexPageNav{
+        vertical-align: top;
+        display: inline-block;
+        min-width: 11rem;
+        height: 3.5rem;
+        font-size: 2rem;
+        border: gray solid 2px;
+        margin: 0.4rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    
+    .page{
+        left: 0;
+        display: inline-block;
+        background: rgb(255, 255, 255);
+        height: 50%;
+        width: 70rem;
+        font-family: 'Gruppo', cursive;
+        font-size: 1.5rem;
+        text-align: justify;
+        padding: 1rem;
+    }
+    .page img{
+        max-width: 70%;
+        margin: 1rem;
+        float: left;
+    }
+    .page a{
+        text-decoration:none;
+        color: rgb(97, 97, 219);
+        font-weight: bold;
+    }
+    .page a:hover{
+        text-decoration:none;
+        color: orangered;
+    }
+    .note{
+        margin: 3px;
+        padding: 5px;
+        left: auto;
+        right: 0;
+        display: inline-block;
+        background: red;
+        height: 100%;
+        width: 20rem;
+        vertical-align:top;
+    }
+
+}
+/*------------------------------------------------- Tablet -------------------------------------------------*/
+
+@media only screen and (min-width:321px) and (max-width:768px){
+    nav.menuPage{
+        display: none;
+    }
+
+
+
+    h1{
+        display: block;
+        font-family: 'Geostar Fill', cursive;
+        color: rgb(64, 16, 141);
+        font-size: 2rem;
+    }
+    header{
+        position: relative;
+    }
+    header nav{
+        display: block;
+        text-align: center; 
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    main{
+        display: inline-block;
+        text-align: left; 
+    }
+
+    .areaMain{
+        display: inline-block;
+        margin: 0;
+        top: 0;
+    }
+
+
+    .buttonNav{
+        display: inline-block;
+        width: 3rem;
+        height: 3rem;
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 0;
+        vertical-align: top;
+        
+    }
+    .buttonNav:hover{
+        color:aqua;
+        
+    }
+    .buttonNav:active{
+        color:red;
+    }
+    .indexPageNav{
+        vertical-align: top;
+        display: inline-block;
+        min-width: 7rem;
+        height: 2rem;
+        font-size: 1.2rem;
+        border: gray solid 1px;
+        margin: 0.2rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+
+
+
+
+    .page{
+        left: 0;
+        display: inline-block;
+        background: rgb(255, 255, 255);
+        width:90%;
+        font-family: 'Gruppo', cursive;
+        font-size: 1.3rem;
+        text-align: justify;
+        padding: 0.3rem;
+    }
+    .page img{
+        max-width: 70%;
+        margin: 1rem;
+        float: left;
+    }
+    .page img.img-centrata{
+        max-width: 100%;
+        margin: auto;
+    }
+    .page a{
+        text-decoration:none;
+        color: rgb(97, 97, 219);
+        font-weight: bold;
+    }
+    .page a:hover{
+        text-decoration:none;
+        color: orangered;
+    }
+    .note{
+        margin: 3px;
+        padding: 5px;
+        left: auto;
+        right: 0;
+        display: inline-block;
+        background: red;
+        width:auto;
+    }
+
+
+
+
+}
+/*--------------------------------------------------- Phone -----------------------------------------------*/
+@media only screen and (max-width: 320px){
+
+    nav.menuPage{
+        display: none;
+    }
+
+     
+    h1{
+        display: block;
+        font-family: 'Geostar Fill', cursive;
+        color: rgb(64, 16, 141);
+        font-size: 1rem;
+    }
+    h2{
+        font-size: 1rem;
+    }
+    header{
+        position: relative;
+    }
+    header nav{
+        display: block;
+        text-align: center; 
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    .buttonNav{
+        display: inline-block;
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 0;
+        vertical-align: top;
+        
+    }
+
+    .indexPageNav{
+        vertical-align: top;
+        display: inline-block;
+        min-width: 4.5rem;
+        height: 1.5rem;
+        font-size: 1rem;
+        border: gray solid 1px;
+        margin: 0.2rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+
+    .page{
+        left: 0;
+        display: inline-block;
+        background: rgb(255, 255, 255);
+        font-family: 'Gruppo', cursive;
+        font-size: 1.3rem;
+        text-align: justify;
+        padding: 0.3rem;
+    }
+    .page img{
+        max-width: 100%;
+        margin: 0.2rem;
+        float: left;
+    }
+    .page a{
+        text-decoration:none;
+        color: rgb(97, 97, 219);
+        font-weight: bold;
+    }
+    .page a:hover{
+        text-decoration:none;
+        color: orangered;
+    }
+    .note{
+        margin: 0.5px;
+        padding: 0.55px;
+        left: auto;
+        right: 0;
+        display: inline-block;
+        background: red;
+        width:auto;
+    }
+
+
+}
+
+
 
 </style>
