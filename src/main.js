@@ -11,6 +11,7 @@ library.add(faAngleRight,faAngleLeft,faAngleDoubleRight,faAngleDoubleLeft,faInfo
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 
+
 createApp(App)
     .use(store) // installa lo store di Vuex nell'applicazione
     .use(router)

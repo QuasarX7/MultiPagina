@@ -16,7 +16,7 @@
             </div>
             <div v-else class="buttonNav" />
 
-            <div class="indexPageNav"> pag. {{ Number(id_pagina) +1 }} </div>
+            <div class="indexPageNav"> pag. <input size="3"  @change="onChange" :value="Number(id_pagina) +1" /></div>
             
             <div v-if="id_pagina < list.length-1" @click="onNext()" class="buttonNav">
                 <font-awesome-icon icon="angle-right"/>
@@ -55,7 +55,6 @@ import {reactive, toRefs, onMounted,  watch} from 'vue'
 import { useStore } from 'vuex'
 import axios from 'axios'
 import router from "../router"
-
 
 
 
@@ -108,7 +107,6 @@ export default {
                 data.window.dy = window.scrollY - data.window.y;
                 data.window.x= window.scrollX;
                 data.window.y= window.scrollY;
-                console.log('d :>> ', ', ', data.window.x, data.window.y);
             });
            
         });
@@ -176,7 +174,7 @@ export default {
                         data.pageFile = response.data; 
                     }
                 }
-            });
+            });          
         }
 
         function onPrevious(){
@@ -212,8 +210,22 @@ export default {
                 toNav(data.list.length-1);
         }
 
+        function onChange(oEvent){
+            
+            if(oEvent.target.value > 0 && oEvent.target.value <= data.list.length){
+                toNav(Number(oEvent.target.value)-1);
+            }else  if(oEvent.target.value > data.list.length){
+                toNav(Number(data.list.length)-1);
+                oEvent.target.value = Number(data.list.length);
+            }else{
+                toNav(Number(0));
+                oEvent.target.value = Number(1);
+            }
+            
+        }
+
         return{
-            ...toRefs(data),onPrevious, onNext, onFirst,onLast
+            ...toRefs(data),onPrevious, onNext, onFirst,onLast,onChange
         }
     }
 }
@@ -375,10 +387,24 @@ h2{
         min-width: 11rem;
         height: 3.5rem;
         font-size: 2rem;
-        border: gray solid 2px;
         margin: 0.4rem;
         padding-left: 1rem;
         padding-right: 1rem;
+    }
+
+    .indexPageNav>input{
+        border:none;
+        font-family: 'Geostar Fill', cursive;
+        color: rgb(77, 1, 1);
+        text-shadow: 2px 2px 2px aqua;
+        height: 2rem;
+        font-size: 24px;
+        text-align: center;
+    }
+    .indexPageNav>input:focus{
+        text-shadow: 2px 2px 2px red;
+        outline-color:aqua;
+        box-shadow:  0px 0px 20px aqua;
     }
 
     
@@ -482,13 +508,20 @@ h2{
         min-width: 7rem;
         height: 2rem;
         font-size: 1.2rem;
-        border: gray solid 1px;
         margin: 0.2rem;
         padding-left: 0.5rem;
         padding-right: 0.5rem;
     }
 
-
+    .indexPageNav>input{
+        border:none;
+        font-family: 'Geostar Fill', cursive;
+        color: rgb(77, 1, 1);
+        text-shadow: 2px 2px 2px aqua;
+        height: 2rem;
+        font-size: 20px;
+        text-align: center;
+    }
 
 
 
