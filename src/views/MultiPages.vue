@@ -1,10 +1,19 @@
 <template>
 
-    <nav-menu id="navMenu"  v-if="window.dy <= 0" />
+    <nav-menu id="navMenu" v-if="window.dy <= 0" />
     
     <header v-if="titlePage" >
         <h1>{{title}}</h1>
-        <h2>{{titlePage}}</h2>
+        <input class="titleSearch"  
+            type="search" list="listTitlePage" autocorrect="true"
+            :value="titlePage" 
+            @focus="focusTitlePage"
+            @blur="blurTitlePage" 
+            @change="selectTitlePage"
+        />
+        <datalist id="listTitlePage">
+            <option v-for="(item,index) in list" :key="index" :value="item['sotto-titolo']" />
+        </datalist>
         <nav>
             <div v-if="id_pagina > 0" @click="onFirst()" class="buttonNav">
                 <font-awesome-icon icon="angle-double-left"/>
@@ -224,8 +233,26 @@ export default {
             
         }
 
+        function focusTitlePage(event){
+            event.target.value = "";
+        }
+
+        function blurTitlePage(event){
+            event.target.value = data.titlePage;
+        }
+
+        function selectTitlePage(event) {
+            for (let index = 0; index < data.list.length; index++) {
+                if( data.list[index]['sotto-titolo'] == event.target.value){
+                    toNav(index);
+                    break;
+                }
+            }
+        }
+
+
         return{
-            ...toRefs(data),onPrevious, onNext, onFirst,onLast,onChange
+            ...toRefs(data),onPrevious, onNext, onFirst,onLast,onChange,focusTitlePage,blurTitlePage,selectTitlePage
         }
     }
 }
@@ -292,10 +319,21 @@ body{
     left: 0;
 }
 
-h2{
+.titleSearch{
     text-shadow: 0 0 3px rgb(0, 255, 242);
+    font-family: 'Geostar', cursive;
+    text-align: center;
+    border-style: none;
+    outline: none;
+    width: auto;
     color: rgb(8, 0, 126);
     font-size: 2.5rem;
+}
+
+.titleSearch:focus{
+    border: 2px solid aqua;
+    border-radius: 0.25rem;
+    box-shadow:  0px 0px 20px aqua;
 }
 
 
@@ -453,7 +491,16 @@ h2{
         display: none;
     }
 
-
+    .titleSearch{
+        text-shadow: 0 0 3px rgb(0, 255, 242);
+        font-family: 'Geostar', cursive;
+        text-align: center;
+        border-style: none;
+        outline: none;
+        width: 100%;
+        color: rgb(8, 0, 126);
+        font-size: 2rem;
+    }
 
     h1{
         display: block;
@@ -581,7 +628,15 @@ h2{
         color: rgb(64, 16, 141);
         font-size: 1rem;
     }
-    h2{
+   
+    .titleSearch{
+        text-shadow: 0 0 3px rgb(0, 255, 242);
+        font-family: 'Geostar', cursive;
+        text-align: center;
+        border-style: none;
+        outline: none;
+
+        color: rgb(8, 0, 126);
         font-size: 1rem;
     }
     header{
