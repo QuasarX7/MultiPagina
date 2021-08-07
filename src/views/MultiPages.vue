@@ -1,7 +1,7 @@
 <template>
 
     <nav-menu id="navMenu" v-if="window.dy <= 0" />
-    
+   
     <header v-if="titlePage" >
         <h1>{{title}}</h1>
         <input class="titleSearch"  
@@ -14,6 +14,7 @@
         <datalist id="listTitlePage">
             <option v-for="(item,index) in list" :key="index" :value="item['sotto-titolo']" />
         </datalist>
+        
         <nav>
             <div v-if="id_pagina > 0" @click="onFirst()" class="buttonNav">
                 <font-awesome-icon icon="angle-double-left"/>
@@ -54,6 +55,31 @@
             <img style='height: 90%; width: 90%; object-fit: contain' src="note.jpg" />
         </section>
     </main>
+
+    <nav v-if="window.y > window.height">
+            <div v-if="id_pagina > 0" @click="onFirst()" class="buttonNav">
+                <font-awesome-icon icon="angle-double-left"/>
+            </div>
+            <div v-else class="buttonNav" />
+
+            <div v-if="id_pagina > 0" @click="onPrevious()" class="buttonNav">
+                <font-awesome-icon icon="angle-left"/>
+            </div>
+            <div v-else class="buttonNav" />
+
+            <div class="indexPageNav"> pag. <input size="3"  @change="onChange" :value="Number(id_pagina) +1" /></div>
+            
+            <div v-if="id_pagina < list.length-1" @click="onNext()" class="buttonNav">
+                <font-awesome-icon icon="angle-right"/>
+            </div>
+            <div v-else class="buttonNav" />
+
+            <div v-if="id_pagina < list.length-1" @click="onLast()" class="buttonNav">
+                <font-awesome-icon icon="angle-double-right"/>
+            </div>
+            <div v-else class="buttonNav" />
+            
+        </nav>
     
 </template>
 
@@ -112,6 +138,9 @@ export default {
             });
 
             window.addEventListener('scroll',() =>{
+                data.window.width = window.innerWidth;
+                data.window.height = window.innerHeight;
+                
                 data.window.dx = window.scrollX - data.window.x;
                 data.window.dy = window.scrollY - data.window.y;
                 data.window.x= window.scrollX;
@@ -271,10 +300,7 @@ export default {
     margin-top: 60px;
 }
 
-body{
-    margin: 0;
-    padding: 0;
-}
+
 /* animazione */
 
 #navMenu {
@@ -286,6 +312,7 @@ body{
     left: 0;
     margin: 0;
     padding: 0;
+    width: 100%;
     box-shadow: 0px 5px 5px gray;
 }
 
@@ -336,6 +363,11 @@ body{
     box-shadow:  0px 0px 20px aqua;
 }
 
+header,footer,main,html,body{
+    width: 100%;
+    margin: 0 ;
+    padding: 0;
+}
 
 
 @import url('https://fonts.googleapis.com/css2?family=Gruppo&display=swap');
@@ -378,7 +410,7 @@ body{
     }
     header nav{
         display: block;
-        width: auto;
+        width: 100%;
         text-align: center; 
         top: 0;
         right: 0;
@@ -523,12 +555,15 @@ body{
     main{
         display: inline-block;
         text-align: left; 
+        width: 100%;
     }
 
     .areaMain{
         display: inline-block;
         margin: 0;
         top: 0;
+        width: 100%;
+        overflow: auto;
     }
 
 

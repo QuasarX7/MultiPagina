@@ -23,6 +23,7 @@ export default {
 
 @import url('https://fonts.googleapis.com/css2?family=Geostar+Fill&display=swap');
 #app {
+    width: 100%;
     position: relative;
     font-family: 'Geostar', cursive;
     -webkit-font-smoothing: antialiased;
