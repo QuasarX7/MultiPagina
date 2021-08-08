@@ -46,9 +46,17 @@
             <list-topic :name="title" :menu="list" :nameMenuBar="nameItemMenu"  />
         </nav>
         <section v-if="pageFile" class="areaMain">
-            <article  
-                class ="page"  
-                v-html="pageFile" />
+            <!-- area pagina -->
+            <article class ="page" v-html="pageFile" />
+
+            <!-- area note -->
+            <article class ="note" >Attenzione: sito è in fase di costruzione!</article>
+        </section>
+        <section v-else-if="slides.length > 0" class="areaMain">
+            <!-- area slide -->
+            <view-slides :images="slides" />
+            
+            <!-- area note -->
             <article class ="note" >Attenzione: sito è in fase di costruzione!</article>
         </section>
         <section v-else>
@@ -86,6 +94,7 @@
 <script>
 import NavMenu from '../components/NavMenu.vue'
 import ListTopic from '../components/ListTopic.vue'
+import Slides from '../components/Slides.vue'
 import {reactive, toRefs, onMounted,  watch} from 'vue'
 import { useStore } from 'vuex'
 import axios from 'axios'
@@ -102,7 +111,8 @@ export default {
     ],
     components: {
         'nav-menu' : NavMenu,
-        'list-topic' : ListTopic
+        'list-topic' : ListTopic,
+        'view-slides': Slides
     },
     setup(props) {
         const store = useStore();
@@ -114,6 +124,7 @@ export default {
             titlePage : '',
             list : [],
             pageFile : null,//< code file
+            slides : [],// image list
             nameItemMenu : '',
             window : {
                 width : 0,
@@ -197,8 +208,13 @@ export default {
             if(store.getters.titlePage)
                 data.titlePage=store.getters.titlePage;
 
-            if(store.getters.file)
+            if(store.getters.file){
                 loadFilePage(store.getters.file);
+                data.slides = [];
+            }else if(Array.isArray(store.getters.imageList)){
+                data.slides = store.getters.imageList;
+                data.pageFile = null;
+            }
         }
 
         /**

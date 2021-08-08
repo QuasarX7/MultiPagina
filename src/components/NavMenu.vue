@@ -138,6 +138,15 @@ export default {
 								"sotto-titolo" : "the",
 								"file" : "PagineWeb/Inglese/Dizionario/the.html"
 							},
+                            .....
+                            {
+                                "sotto-titolo" : "Gioco aperto",
+								"diapositive" : [
+									"PagineWeb/scacchi/b.png",
+									"PagineWeb/scacchi/b-e4.png",
+									"PagineWeb/scacchi/b-e4e5.png"
+								]
+                            }
                             ......
                         ]
                     }

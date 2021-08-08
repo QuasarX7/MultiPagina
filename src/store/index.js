@@ -82,6 +82,13 @@ const storeConfig = {
             } catch (e) {
                 e;
             }
+        },
+        imageList(state) {
+             try {
+                return state.dataTopic[state.currentMenu]['pagine'][state.currentPage]["diapositive"];
+            } catch (e) {
+                e;
+            }
         }
 
     },
