@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import {reactive, toRefs,onMounted} from 'vue'
+import {reactive, toRefs,onMounted,watch} from 'vue'
 export default {
 
     name : 'Slides',
@@ -32,11 +32,28 @@ export default {
             image : ''
         });
 
-
-        onMounted(() => {
+        function init() {
+            data.index = 0;
             data.limit = props.images.length - 1;
             data.image = props.images[0];
+        }
+
+        onMounted(() => {
+            init();
         });
+
+        /**
+         * All'aggiornamento della pagina al variare dello stato della props 'id_argomento' o 'id_pagina'
+         */
+        watch(
+            [
+                () => props.images,
+            ],
+            () => {
+                init();
+            }
+        );
+        
 
         function onPrevious(){
             if(data.index > 0){
