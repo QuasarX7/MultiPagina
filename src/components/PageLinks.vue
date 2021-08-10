@@ -1,6 +1,6 @@
 <template>
   <nav v-if="list.length > 0">
-    <h2>Link</h2>
+    <h2>Link:</h2>
         <ul>
             <li @click="onSelectItem(item)" v-for="(item, index) in list" :key="index">
                      {{ item["sotto-titolo"] }}

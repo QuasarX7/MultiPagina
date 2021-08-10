@@ -58,6 +58,12 @@
             
             <!-- area note -->
             <article class ="note"><div style="background: red;">Attenzione: sito è in fase di costruzione!</div>
+                <!-- note pagina -->
+                <div v-if="notePage">
+                    <h2>Info:</h2>
+                    {{notePage}}
+                </div>
+                <!-- link -->
                 <page-links :list="links" />
             </article>
         </section>
@@ -130,6 +136,7 @@ export default {
             pageFile : null,//< code file
             slides : [],// image list
             links : [], // note (links)
+            notePage : "",
             nameItemMenu : '',
             window : {
                 width : 0,
@@ -226,6 +233,9 @@ export default {
             }else{
                 data.links = [];
             }
+
+            data.notePage = store.getters.notePage;
+            
 
 
         }

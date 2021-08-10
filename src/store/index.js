@@ -96,6 +96,13 @@ const storeConfig = {
             } catch (e) {
                 e;
             }
+        },
+        notePage(state) {
+             try {
+                return state.dataTopic[state.currentMenu]['pagine'][state.currentPage]["note"];
+            } catch (e) {
+                e;
+            }
         }
 
     },
