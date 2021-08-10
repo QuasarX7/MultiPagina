@@ -57,7 +57,9 @@
             <view-slides :images="slides" />
             
             <!-- area note -->
-            <article class ="note" >Attenzione: sito è in fase di costruzione!</article>
+            <article class ="note"><div style="background: red;">Attenzione: sito è in fase di costruzione!</div>
+                <page-links :list="links" />
+            </article>
         </section>
         <section v-else>
             <img style='height: 90%; width: 90%; object-fit: contain' src="note.jpg" />
@@ -99,6 +101,7 @@ import {reactive, toRefs, onMounted,  watch} from 'vue'
 import { useStore } from 'vuex'
 import axios from 'axios'
 import router from "../router"
+import PageLinks from '../components/PageLinks.vue'
 
 
 
@@ -112,7 +115,8 @@ export default {
     components: {
         'nav-menu' : NavMenu,
         'list-topic' : ListTopic,
-        'view-slides': Slides
+        'view-slides': Slides,
+        'page-links': PageLinks
     },
     setup(props) {
         const store = useStore();
@@ -125,6 +129,7 @@ export default {
             list : [],
             pageFile : null,//< code file
             slides : [],// image list
+            links : [], // note (links)
             nameItemMenu : '',
             window : {
                 width : 0,
@@ -215,6 +220,14 @@ export default {
                 data.slides = store.getters.imageList;
                 data.pageFile = null;
             }
+
+            if(Array.isArray(store.getters.links)){
+                data.links = store.getters.links;
+            }else{
+                data.links = [];
+            }
+
+
         }
 
         /**
@@ -368,9 +381,10 @@ export default {
     text-align: center;
     border-style: none;
     outline: none;
-    width: auto;
+    width: 70%;
     color: rgb(8, 0, 126);
     font-size: 2.5rem;
+
 }
 
 .titleSearch:focus{
@@ -525,7 +539,6 @@ header,footer,main,html,body{
         left: auto;
         right: 0;
         display: inline-block;
-        background: red;
         height: 100%;
         width: 20rem;
         vertical-align:top;
@@ -686,7 +699,6 @@ header,footer,main,html,body{
         text-align: center;
         border-style: none;
         outline: none;
-
         color: rgb(8, 0, 126);
         font-size: 1rem;
     }

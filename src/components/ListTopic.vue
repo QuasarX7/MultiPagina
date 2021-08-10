@@ -15,9 +15,6 @@ import { useStore } from 'vuex';
 export default {
     name : 'ListTopic',
     props:['name','menu','nameMenuBar'],
-    emits: {
-        'selected-item' : 'selectedItem'
-    },
     setup(props){
         const store = useStore();
        

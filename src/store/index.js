@@ -89,6 +89,13 @@ const storeConfig = {
             } catch (e) {
                 e;
             }
+        },
+        links(state) {
+             try {
+                return state.dataTopic[state.currentMenu]['pagine'][state.currentPage]["collegamenti"];
+            } catch (e) {
+                e;
+            }
         }
 
     },
