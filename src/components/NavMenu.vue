@@ -13,7 +13,7 @@
     }"
   >
   <template #link-icon>
-    <font-awesome-icon icon="jedi" size="lg" />
+    <font-awesome-icon icon="feather-alt" size="lg" />
   </template>
   </DockMenu>
 </template>
@@ -192,17 +192,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Turret+Road:wght@800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
-#idNavMenu{
-    font-family: 'Orbitron', sans-serif;
-    font-size: 3rem;
-}
-ul{
-    font-family: 'Orbitron', sans-serif;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    text-align: left;
-}
+
+
 </style>

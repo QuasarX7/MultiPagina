@@ -1,6 +1,6 @@
 <template>
     <nav v-if="menu.length > 0">
-        <h3><font-awesome-icon icon="jedi" size="2x"/> Pagine</h3>
+        <h3><font-awesome-icon icon="feather-alt" size="2x"/> Pagine</h3>
         <ul>
             <li @click="onSelectItem(index)" v-for="(item, index) in menu" :key="item['sotto-titolo']">
                     {{index+ 1}} . {{ item["sotto-titolo"] }}
@@ -46,7 +46,7 @@ nav{
 nav ul{
     background-color: rgb(255, 255, 255);
     color: white;
-    font-family: 'Geostar Fill', cursive;
+    font-family: 'Orbitron', sans-serif;
     list-style-type: none;
     margin-right: 0.5rem;
     padding: 0;

@@ -21,11 +21,9 @@ export default {
 <style>
 
 
-@import url('https://fonts.googleapis.com/css2?family=Geostar+Fill&display=swap');
 #app {
     width: 100%;
     position: relative;
-    font-family: 'Geostar', cursive;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;

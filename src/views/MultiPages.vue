@@ -103,7 +103,7 @@
 import NavMenu from '../components/NavMenu.vue'
 import ListTopic from '../components/ListTopic.vue'
 import Slides from '../components/Slides.vue'
-import {reactive, toRefs, onMounted,  watch} from 'vue'
+import {reactive, toRefs, onMounted,  watch, computed} from 'vue'
 import { useStore } from 'vuex'
 import axios from 'axios'
 import router from "../router"
@@ -126,7 +126,7 @@ export default {
     },
     setup(props) {
         const store = useStore();
-
+        const  LEN_MENU_PAGE = '20rem';
        
 
         let data = reactive({
@@ -138,31 +138,181 @@ export default {
             links : [], // note (links)
             notePage : "",
             nameItemMenu : '',
+
             window : {
-                width : 0,
+                width : window.screenWidth,
                 height : 0,
                 x:  0,
                 y:  0,
                 dx: 0,
                 dy: 0
-
             },
+
+            style : {
+                title : { 
+                    size : computed( () => {
+                        return screen(
+                            () => '3rem',
+                            () => '2.5rem',
+                            () => '2.2rem',
+                            () => '2rem',
+                            () => '1.9rem'
+                        );
+                    })
+                },
+                menuPage : {
+                    display : computed(() => {
+                        return screen(
+                            () => 'inline',
+                            () => 'inline',
+                            () => 'none',
+                            () => 'none',
+                            () => 'none'
+                        );
+                    }),
+                    length : computed(() => {
+                        return screen(
+                            () => LEN_MENU_PAGE,
+                            () => LEN_MENU_PAGE,
+                            () => '0',
+                            () => '0',
+                            () => '0'
+                        );
+                    }),
+                    
+                },
+                mainArea : {
+                    align : computed(() => {
+                        return screen(
+                            () => 'left',
+                            () => 'left',
+                            () => 'center',
+                            () => 'center',
+                            () => 'center'
+                        );
+                    }),
+                },
+                page : {
+                    length : computed(() => {
+                        return screen(
+                            () => '75%',
+                            () => '75%',
+                            () => '100%',
+                            () => '100%',
+                            () => '100%'
+                        );
+                    }),
+                    text : computed(() => {
+                        return screen(
+                            () => '1.5rem',
+                            () => '1.5rem',
+                            () => '1.3rem',
+                            () => '1.1rem',
+                            () => '1.0rem'
+                        );
+                    }),
+                },
+                img : {
+                    length : computed(() => {
+                        return screen(
+                            () => '70%',
+                            () => '70%',
+                            () => '100%',
+                            () => '100%',
+                            () => '100%'
+                        );
+                    }),
+                    align : computed(() => {
+                        return screen(
+                            () => 'left',
+                            () => 'left',
+                            () => 'left',
+                            () => 'none',
+                            () => 'none'
+                        );
+                    }),
+                },
+                note : {
+                    display : computed(() => {
+                        return screen(
+                            () => 'inline-block',
+                            () => 'inline-block',
+                            () => 'block',
+                            () => 'block',
+                            () => 'block'
+                        );
+                    }),
+                    length : computed(() => {
+                        return screen(
+                            () => '25%',
+                            () => '25%',
+                            () => '100%',
+                            () => '100%',
+                            () => '100%'
+                        );
+                    }),
+                },
+                button : {
+                    size : computed(() => {
+                        return screen(
+                            () => '3rem',
+                            () => '3rem',
+                            () => '2.5rem',
+                            () => '2rem',
+                            () => '1.8rem'
+                        );
+                    }),
+                }
+            }
 
             
         });
 
+        /**
+         * Determina il tipo di schermo in base alla lunghezza della finestra.
+         * 
+         * @param {function} fnDesktop          lunghezza finestra  > 1200px
+         * @param {function} fnLaptops          lunghezza finestra  > 992px e <= 1200px
+         * @param {function} fnTableLandscape   lunghezza finestra  > 765px e <= 992px
+         * @param {function} fnTablePortrait    lunghezza finestra  > 600px e <= 768px
+         * @param {function} fnPhone            lunghezza finestra  <= 600px 
+         * @returns {*} valori di una delle funzioni passate come argomento
+         */
+        function screen(fnDesktop,fnLaptops,fnTableLandscape,fnTablePortrait,fnPhone){
+            var width = window.screenWidth;
+            if(data.window.width){
+                width = data.window.width;
+            }
+            if(width > 1200 ){
+                return fnDesktop();
+
+            }else if(width > 992 && width <= 1200){
+                return fnLaptops();
+
+            }else if(width > 768 && width <= 992){
+                return fnTableLandscape();
+
+            }else if(width > 600 && width <= 768){
+                return fnTablePortrait();
+
+            }else{
+                return fnPhone();
+            }
+        }
+
+        function initSizeWindow(){
+            data.window.width  = Math.min(window.screen.width,window.innerWidth);
+            data.window.height = Math.min(window.screen.height,window.innerHeight);
+        }
 
         onMounted(() => {
-            data.window.width = window.screenWidth;
-            data.window.height = window.screenHeight;
+            initSizeWindow();
             window.addEventListener('resize', ()=>{
-                data.window.width = window.innerWidth;
-                data.window.height = window.innerHeight;
+                initSizeWindow();
             });
 
             window.addEventListener('scroll',() =>{
-                data.window.width = window.innerWidth;
-                data.window.height = window.innerHeight;
+                initSizeWindow();
                 
                 data.window.dx = window.scrollX - data.window.x;
                 data.window.dy = window.scrollY - data.window.y;
@@ -201,6 +351,7 @@ export default {
                 init();
             }
         );
+
 
         
         /**
@@ -328,10 +479,21 @@ export default {
 </script>
 
 <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Geostar+Fill&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gruppo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nothing+You+Could+Do&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rammetto+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poller+One&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Stint+Ultra+Expanded&display=swap');
+
 #MultiPages {
     position: relative;
-    font-family: 'Geostar', cursive;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
@@ -343,7 +505,7 @@ export default {
 /* animazione */
 
 #navMenu {
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Michroma', sans-serif;
     animation-duration: 0.6s;
     animation-name: slidein;
     animation-iteration-count:initial;
@@ -377,23 +539,25 @@ export default {
   }
 }
 
-/* */
-.menu-bar-container[data-v-4a501398].top, .menu-bar-container[data-v-4a501398].bottom {
-    height: 3.5rem;
-    width: 100%;
-    align-items: center;
-    left: 0;
+/* dynamic */
+h1{
+    text-align: center;
+    font-family: 'Poller One', cursive;
+    font-weight: normal;
+    color: black;
+    text-shadow: 0 0 10px rgb(0, 255, 242);
+    font-size: v-bind("style.title.size");
 }
 
 .titleSearch{
     text-shadow: 0 0 3px rgb(0, 255, 242);
-    font-family: 'Geostar', cursive;
+    font-family: 'Gruppo', cursive;
     text-align: center;
     border-style: none;
     outline: none;
-    width: 70%;
+    width: v-bind("style.page.length");
     color: rgb(8, 0, 126);
-    font-size: 2.5rem;
+    font-size: v-bind("style.title.size");
 
 }
 
@@ -403,387 +567,153 @@ export default {
     box-shadow:  0px 0px 20px aqua;
 }
 
-header,footer,main,html,body{
-    width: 100%;
-    margin: 0 ;
-    padding: 0;
+nav.menuPage{
+    display: v-bind("style.menuPage.display");
 }
 
-
-@import url('https://fonts.googleapis.com/css2?family=Gruppo&display=swap');
-
-
-/* stili */
-@import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
-.tecnico{
-    font-family: 'Michroma', sans-serif;
+.areaMain{
+    position: relative;
+    display: inline-block;
+    width: calc(100% - v-bind("style.menuPage.length") );
+    vertical-align: top;
+    top: 0;
+    left: 0;
+    clear: both;
+    text-align: v-bind("style.mainArea.align") ;
 }
 
+.page{
+    left: 0;
+    display: inline-block;
+    background: rgb(255, 255, 255);
+    height: 50%;
+    width: v-bind("style.page.length");
+    font-family: 'Gruppo', cursive;
+    font-size: v-bind("style.page.text");
+    text-align: justify;
+
+}
+
+.page a{
+    text-decoration:none;
+    color: rgb(97, 97, 219);
+    font-weight: bold;
+}
+.page a:hover{
+    text-decoration:none;
+    color: orangered;
+}
+
+.contenuto-centrato .img-centrata{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.page img{
+    max-width: v-bind("style.img.length");
+    margin: 1rem;
+    float: v-bind("style.img.align");
+}
 .contenuto-centrato{
     position: relative;
     margin: auto;
     float: none;
     width: 100%;
 }
-.contenuto-centrato .img-centrata{
+.page img.img-centrata{
+    max-width: 100%;
+    margin: auto;
+}
+
+.page .titolo{
     display: block;
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
+    float: left;
+}
+
+.page img.estesa{
+    float: none;
+}
+
+.note{
+    font-family: 'Stint Ultra Expanded', cursive;
+    font-size: 1.5rem;
+    left: auto;
+    right: 0;
+    display: v-bind("style.note.display");
+    height: auto;
+    width: v-bind("style.note.length");
+    vertical-align:top;
+    text-align: left;
 }
 
 
-/*------------------------------------------------- Desktop -----------------------------------------*/
-@media only screen and (min-width:769px){
+.menu-bar-container[data-v-4a501398].top, .menu-bar-container[data-v-4a501398].bottom {
+    height: 3.5rem;
+    width: 100%;
+    align-items: center;
+    left: 0;
+}
 
-    nav.menuPage{
-        display: inline;
-    }
 
-    h1{
-        display: block;
-        font-family: 'Geostar Fill', cursive;
-        color: rgb(64, 16, 141);
-        font-size: 3rem;
-    }
-    header{
-        position: relative;
-    }
-    header nav{
-        display: block;
-        width: 100%;
-        text-align: center; 
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        margin: auto;
-    }
 
-    main{
-        display: inline-block;
-        width: 100%;
-        height: auto;
-        text-align: left; 
-    }
+header,footer,html,body{
+    width: 100%;
+    margin: 0 ;
+    padding: 0;
+}
+main{
+    padding: 1rem;
+}
 
-    .areaMain{
-        display: inline-block;
-        width: calc(100% - 20rem);
-        vertical-align: top;
-        margin: 0;
-        top: 0;
-        clear: both;
-    }
-    .buttonNav{
-        display: inline-block;
-        width: 4rem;
-        height: 4rem;
-        font-size: 3rem;
-        cursor: pointer;
-        padding: 0;
-        vertical-align: top;
-        
-    }
-    .buttonNav:hover{
-        color:aqua;
-        
-    }
-    .buttonNav:active{
-        color:red;
-    }
-    .indexPageNav{
-        vertical-align: top;
-        display: inline-block;
-        min-width: 11rem;
-        height: 3.5rem;
-        font-size: 2rem;
-        margin: 0.4rem;
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
 
-    .indexPageNav>input{
-        border:none;
-        font-family: 'Geostar Fill', cursive;
-        color: rgb(77, 1, 1);
-        text-shadow: 2px 2px 2px aqua;
-        height: 2rem;
-        font-size: 24px;
-        text-align: center;
-    }
-    .indexPageNav>input:focus{
-        text-shadow: 2px 2px 2px red;
-        outline-color:aqua;
-        box-shadow:  0px 0px 20px aqua;
-    }
 
+.indexPageNav{
+    vertical-align: top;
+    display: inline-block;
+    min-width: 11rem;
+    height: v-bind("style.button.size");
+    font-family: 'Geostar Fill', cursive;
+    font-size: v-bind("style.page.text");
+    margin: 0.4rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.indexPageNav>input{
+    border:none;
+    font-family: 'Geostar Fill', cursive;
+    color: rgb(77, 1, 1);
+    text-shadow: 2px 2px 2px aqua;
+    height: v-bind("style.button.size");
+    font-size: v-bind("style.page.text");
+    text-align: center;
+}
+.indexPageNav>input:focus{
+    text-shadow: 2px 2px 2px red;
+    outline-color:aqua;
+    box-shadow:  0px 0px 20px aqua;
+}
+
+
+
+.buttonNav{
+    display: inline-block;
+    width: v-bind("style.button.size");
+    height: v-bind("style.button.size");
+    font-size: v-bind("style.button.size");
+    cursor: pointer;
+    padding: 0;
+    margin: 0.5rem;
+    vertical-align: top;
     
-    .page{
-        left: 0;
-        display: inline-block;
-        background: rgb(255, 255, 255);
-        height: 50%;
-        width: 70rem;
-        font-family: 'Gruppo', cursive;
-        font-size: 1.5rem;
-        text-align: justify;
-        padding: 1rem;
-    }
-    .page img{
-        max-width: 70%;
-        margin: 1rem;
-        float: left;
-    }
-    .page a{
-        text-decoration:none;
-        color: rgb(97, 97, 219);
-        font-weight: bold;
-    }
-    .page a:hover{
-        text-decoration:none;
-        color: orangered;
-    }
-    .note{
-        margin: 3px;
-        padding: 5px;
-        left: auto;
-        right: 0;
-        display: inline-block;
-        height: 100%;
-        width: 20rem;
-        vertical-align:top;
-    }
-
 }
-/*------------------------------------------------- Tablet -------------------------------------------------*/
-
-@media only screen and (min-width:321px) and (max-width:768px){
-    nav.menuPage{
-        display: none;
-    }
-
-    .titleSearch{
-        text-shadow: 0 0 3px rgb(0, 255, 242);
-        font-family: 'Geostar', cursive;
-        text-align: center;
-        border-style: none;
-        outline: none;
-        width: 100%;
-        color: rgb(8, 0, 126);
-        font-size: 2rem;
-    }
-
-    h1{
-        display: block;
-        font-family: 'Geostar Fill', cursive;
-        color: rgb(64, 16, 141);
-        font-size: 2rem;
-    }
-    header{
-        position: relative;
-    }
-    header nav{
-        display: block;
-        text-align: center; 
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-    }
-
-    main{
-        display: inline-block;
-        text-align: left; 
-        width: 100%;
-    }
-
-    .areaMain{
-        display: inline-block;
-        margin: 0;
-        top: 0;
-        width: 100%;
-        overflow: auto;
-    }
-
-
-    .buttonNav{
-        display: inline-block;
-        width: 3rem;
-        height: 3rem;
-        font-size: 2rem;
-        cursor: pointer;
-        padding: 0;
-        vertical-align: top;
-        
-    }
-    .buttonNav:hover{
-        color:aqua;
-        
-    }
-    .buttonNav:active{
-        color:red;
-    }
-    .indexPageNav{
-        vertical-align: top;
-        display: inline-block;
-        min-width: 7rem;
-        height: 2rem;
-        font-size: 1.2rem;
-        margin: 0.2rem;
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-    }
-
-    .indexPageNav>input{
-        border:none;
-        font-family: 'Geostar Fill', cursive;
-        color: rgb(77, 1, 1);
-        text-shadow: 2px 2px 2px aqua;
-        height: 2rem;
-        font-size: 20px;
-        text-align: center;
-    }
-
-
-
-    .page{
-        left: 0;
-        display: inline-block;
-        background: rgb(255, 255, 255);
-        width:90%;
-        font-family: 'Gruppo', cursive;
-        font-size: 1.3rem;
-        text-align: justify;
-        padding: 0.3rem;
-    }
-    .page img{
-        max-width: 70%;
-        margin: 1rem;
-        float: left;
-    }
-    .page img.img-centrata{
-        max-width: 100%;
-        margin: auto;
-    }
-    .page a{
-        text-decoration:none;
-        color: rgb(97, 97, 219);
-        font-weight: bold;
-    }
-    .page a:hover{
-        text-decoration:none;
-        color: orangered;
-    }
-    .note{
-        margin: 3px;
-        padding: 5px;
-        left: auto;
-        right: 0;
-        display: inline-block;
-        background: red;
-        width:auto;
-    }
-
-
-
-
+.buttonNav:hover{
+    color:aqua;
+    
 }
-/*--------------------------------------------------- Phone -----------------------------------------------*/
-@media only screen and (max-width: 320px){
-
-    nav.menuPage{
-        display: none;
-    }
-
-     
-    h1{
-        display: block;
-        font-family: 'Geostar Fill', cursive;
-        color: rgb(64, 16, 141);
-        font-size: 1rem;
-    }
-   
-    .titleSearch{
-        text-shadow: 0 0 3px rgb(0, 255, 242);
-        font-family: 'Geostar', cursive;
-        text-align: center;
-        border-style: none;
-        outline: none;
-        color: rgb(8, 0, 126);
-        font-size: 1rem;
-    }
-    header{
-        position: relative;
-    }
-    header nav{
-        display: block;
-        text-align: center; 
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-    }
-
-    .buttonNav{
-        display: inline-block;
-        width: 2.5rem;
-        height: 2.5rem;
-        font-size: 2rem;
-        cursor: pointer;
-        padding: 0;
-        vertical-align: top;
-        
-    }
-
-    .indexPageNav{
-        vertical-align: top;
-        display: inline-block;
-        min-width: 4.5rem;
-        height: 1.5rem;
-        font-size: 1rem;
-        border: gray solid 1px;
-        margin: 0.2rem;
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-    }
-
-
-    .page{
-        left: 0;
-        display: inline-block;
-        background: rgb(255, 255, 255);
-        font-family: 'Gruppo', cursive;
-        font-size: 1.3rem;
-        text-align: justify;
-        padding: 0.3rem;
-    }
-    .page img{
-        max-width: 100%;
-        margin: 0.2rem;
-        float: left;
-    }
-    .page a{
-        text-decoration:none;
-        color: rgb(97, 97, 219);
-        font-weight: bold;
-    }
-    .page a:hover{
-        text-decoration:none;
-        color: orangered;
-    }
-    .note{
-        margin: 0.5px;
-        padding: 0.55px;
-        left: auto;
-        right: 0;
-        display: inline-block;
-        background: red;
-        width:auto;
-    }
-
-
+.buttonNav:active{
+    color:red;
 }
-
 
 
 </style>

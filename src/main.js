@@ -4,10 +4,10 @@ import router from './router'
 import store from "./store"
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faAngleRight, faAngleLeft, faAngleDoubleRight, faAngleDoubleLeft, faInfoCircle, faHome,faJedi,faBomb }
+import { faAngleRight, faAngleLeft, faAngleDoubleRight, faAngleDoubleLeft, faInfoCircle, faHome,faJedi,faBomb,faFeatherAlt }
     from "@fortawesome/free-solid-svg-icons";
 
-library.add(faAngleRight,faAngleLeft,faAngleDoubleRight,faAngleDoubleLeft,faInfoCircle,faHome,faJedi,faBomb);
+library.add(faAngleRight,faAngleLeft,faAngleDoubleRight,faAngleDoubleLeft,faInfoCircle,faHome,faJedi,faBomb,faFeatherAlt);
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 

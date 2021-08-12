@@ -91,6 +91,7 @@ section{
     width: 99vmin; 
     height: 99vmin;
     height: auto;
+    padding: 0.25rem;
 }
 section img{
     display: block;

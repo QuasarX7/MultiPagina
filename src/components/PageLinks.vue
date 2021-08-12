@@ -38,7 +38,13 @@ export default {
 </script>
 
 <style scoped>
+h2{
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+}
 nav ul > li{
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
     display: block;
     margin: 2px;
     padding: 0.7rem;
@@ -47,7 +53,7 @@ nav ul > li{
 }
 nav ul > li:hover{
     list-style-position:inside;
-    color: #ff9100;
+    text-shadow:  0px 0px 3px #ff9100;
     box-shadow:  0px 0px 20px #ff9100;
     border-color: #ff9100;
 }
