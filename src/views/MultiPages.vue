@@ -50,17 +50,19 @@
             <article class ="page" v-html="pageFile" />
 
             <!-- area note -->
-            <article class ="note" >Attenzione: sito è in fase di costruzione!</article>
+            <article class ="note" ><p style="color:red; padding:1rem">Attenzione: sito è in fase di costruzione!</p></article>
         </section>
         <section v-else-if="slides.length > 0" class="areaMain">
             <!-- area slide -->
-            <view-slides :images="slides" />
+            <article class ="slides">
+                <view-slides :images="slides"/>
+            </article>
             
             <!-- area note -->
-            <article class ="note"><div style="background: red;">Attenzione: sito è in fase di costruzione!</div>
+            <article class ="note"><div style="background: red;padding:1rem">Attenzione: sito è in fase di costruzione!</div>
                 <!-- note pagina -->
-                <div v-if="notePage">
-                    <h2>Info:</h2>
+                <div v-if="notePage" style="padding:1rem">
+                    <h2 style="padding:1rem">Info:</h2>
                     {{notePage}}
                 </div>
                 <!-- link -->
@@ -163,8 +165,8 @@ export default {
                 menuPage : {
                     display : computed(() => {
                         return screen(
-                            () => 'inline',
-                            () => 'inline',
+                            () => 'inline-block',
+                            () => 'inline-block',
                             () => 'none',
                             () => 'none',
                             () => 'none'
@@ -582,6 +584,11 @@ nav.menuPage{
     text-align: v-bind("style.mainArea.align") ;
 }
 
+.slides{
+    display: inline;
+    float: left;
+    width: v-bind("style.page.length");
+}
 .page{
     left: 0;
     display: inline-block;
@@ -591,8 +598,8 @@ nav.menuPage{
     font-family: 'Gruppo', cursive;
     font-size: v-bind("style.page.text");
     text-align: justify;
-
 }
+
 
 .page a{
     text-decoration:none;
@@ -636,15 +643,17 @@ nav.menuPage{
 }
 
 .note{
+
     font-family: 'Stint Ultra Expanded', cursive;
-    font-size: 1.5rem;
-    left: auto;
-    right: 0;
+    font-size: v-bind("style.page.text");
     display: v-bind("style.note.display");
     height: auto;
     width: v-bind("style.note.length");
-    vertical-align:top;
     text-align: left;
+    box-shadow: 0 0 10px rgb(0, 255, 242);
+    border-color: aqua;
+    border-width: 1;
+    background-color: rgba(255, 255, 255, 0.294);
 }
 
 

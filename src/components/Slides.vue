@@ -11,13 +11,17 @@
             <div @click="onNext()" :class="index == limit ?  'buttonDisable' :  'buttonActive'" >
                 <font-awesome-icon icon="angle-right"/>
             </div>
+
+            <div @click="onSwitch()" class="buttonActive" >
+                <font-awesome-icon :icon="expand ?  'compress' : 'expand'  "/>
+            </div>
             
         </nav>
     </section>
 </template>
 
 <script>
-import {reactive, toRefs,onMounted,watch} from 'vue'
+import {reactive, toRefs,onMounted,watch, computed} from 'vue'
 export default {
 
     name : 'Slides',
@@ -27,9 +31,23 @@ export default {
     setup(props) {
         
         let data = reactive({
+            expand : true,
             index : 0,
             limit : 0,
-            image : ''
+            image : '',
+            width : computed(
+                () => data.expand ? '100%' : '99vmin'
+            ),
+            width2 : computed(
+                () => data.expand ? '100%' : '99vm'
+            ),
+            hieght : computed(
+                () => data.expand ? 'auto' : '99vmin'
+            ),
+            hieght2 : computed(
+                () => data.expand ? 'auto' : '99vm'
+            ),
+
         });
 
         function init() {
@@ -74,8 +92,12 @@ export default {
             }
         }
 
+        function onSwitch(){
+            data.expand = !data.expand;
+        }
+
         return{
-            ...toRefs(data),onPrevious, onNext
+            ...toRefs(data),onPrevious, onNext,onSwitch
         }
     }
 }
@@ -83,20 +105,25 @@ export default {
 
 <style scoped>
 section{
+    position: relative;
+    margin: auto;
+    float: none;
     background-color: black;
     color: aqua;
     display: inline-block;
-    width: 99vm; /* <-- for IE9 */
-    height: 99vm; /* <-- for IE9 */
-    width: 99vmin; 
-    height: 99vmin;
-    height: auto;
-    padding: 0.25rem;
-}
-section img{
-    display: block;
     width: 100%;
     height: auto;
+    padding: auto;
+    text-align: center;
+    overflow-x: auto;
+}
+section img{
+    margin: auto;
+    display: block;
+    width:  v-bind("width2"); /* <-- for IE9 */
+    height: v-bind("height2");  /* <-- for IE9 */
+    width:  v-bind("width");
+    height: v-bind("height");
 }
 
 nav{
