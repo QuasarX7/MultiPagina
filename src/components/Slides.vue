@@ -31,7 +31,8 @@ export default {
     setup(props) {
         
         let data = reactive({
-            expand : true,
+            switch : false,
+            expand : false,
             index : 0,
             limit : 0,
             image : '',
@@ -57,18 +58,25 @@ export default {
         }
 
         onMounted(() => {
-            init();
+            if(!data.switch){
+                    init();
+            }
+            data.switch = false;
         });
 
         /**
-         * All'aggiornamento della pagina al variare dello stato della props 'id_argomento' o 'id_pagina'
+         * All'aggiornamento della pagina 
          */
         watch(
             [
                 () => props.images,
+                () => data.switch
             ],
             () => {
-                init();
+                if(!data.switch){
+                    init();
+                }
+                data.switch = false;
             }
         );
         
@@ -86,7 +94,6 @@ export default {
         }
 
         function onNext(){
-            
             if(data.index < data.limit){
                 toNav(++data.index);
             }
@@ -94,6 +101,7 @@ export default {
 
         function onSwitch(){
             data.expand = !data.expand;
+            data.switch = true;
         }
 
         return{

@@ -142,7 +142,7 @@ export default {
             nameItemMenu : '',
 
             window : {
-                width : window.screenWidth,
+                width : 0,
                 height : 0,
                 x:  0,
                 y:  0,
@@ -360,7 +360,7 @@ export default {
          * Inizializza e caricamento della pagina
          */
         function init(){
-            
+    
             if(store.getters.listPages)
                 data.list=store.getters.listPages;
 
@@ -485,11 +485,8 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Geostar+Fill&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Gruppo&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nothing+You+Could+Do&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Teko:wght@300&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Rammetto+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poller+One&display=swap');
 
 @import url('https://fonts.googleapis.com/css2?family=Stint+Ultra+Expanded&display=swap');
@@ -650,6 +647,7 @@ nav.menuPage{
     height: auto;
     width: v-bind("style.note.length");
     text-align: left;
+    vertical-align: top;
     box-shadow: 0 0 10px rgb(0, 255, 242);
     border-color: aqua;
     border-width: 1;

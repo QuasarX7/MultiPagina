@@ -105,16 +105,18 @@ export default {
                         var item = {
                             name : row['etichetta']
                         };
-                        if(row["contenuto"]){
-                            // crea sotto-menu
-                            item['menu'] = [];
-                            createItems(row,item['menu'],"contenuto");
-                        }else{
-                            //icona
-                            item["iconSlot"] = "link-icon";
+                        if(row["visibile"] === undefined || row["visibile"] != false){
+                            if(row["contenuto"]){
+                                // crea sotto-menu
+                                item['menu'] = [];
+                                createItems(row,item['menu'],"contenuto");
+                            }else{
+                                //icona
+                                item["iconSlot"] = "link-icon";
+                            }
+                            newMenu.push(item); 
+                            saveTopic(item.name, row['argomento'])
                         }
-                        newMenu.push(item); 
-                        saveTopic(item.name, row['argomento'])
                         
                     }
                     
