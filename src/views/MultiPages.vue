@@ -1,6 +1,6 @@
 <template>
 
-    <nav-menu id="navMenu" v-if="window.dy <= 0" />
+    <nav-menu id="navMenu" v-if="window.dy <= 0" :touch="window.width < 768" />
    
     <header v-if="titlePage" >
         <h1>{{title}}</h1>
@@ -491,19 +491,15 @@ export default {
 
 @import url('https://fonts.googleapis.com/css2?family=Stint+Ultra+Expanded&display=swap');
 
-#MultiPages {
-    position: relative;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-}
+
 
 
 /* animazione */
 
 #navMenu {
+    color: aqua;
+    background-color: black;
+    text-align: left;
     font-family: 'Michroma', sans-serif;
     animation-duration: 0.6s;
     animation-name: slidein;

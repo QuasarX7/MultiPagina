@@ -109,11 +109,11 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');/*[!]*/
 
 #touchMenu{
+    top: 0;
+    text-align: left;
     position:fixed;
     padding: 0;
     margin: 0;
-    text-align: left;
-    top: 0;
     width: 100%;
     display: block;
     background-color: black;

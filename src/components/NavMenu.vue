@@ -1,26 +1,34 @@
 <template>
-  <DockMenu
-    id="idNavMenu"
-    :items="items"
-    :on-selected="handleSelected"
-    :key="update"
-    :theme="{
-      primary: '#000',
-      secondary: '#21022fdf',
-      tertiary: '#000',
-      textColor: 'aqua',
-      textHoverColor: '#fc7a00c7',
-    }"
-  >
-  <template #link-icon>
-    <font-awesome-icon icon="feather-alt" size="lg" />
-  </template>
-  </DockMenu>
+    <template v-if="touch" >
+        <TouchMenu style="margin-top:-60px" :items="items" @on-selected="handleSelected" />
+    </template>
+    <template v-else>
+        <DockMenu
+            id="idNavMenu"
+            :items="items"
+            :on-selected="handleSelected"
+            :key="update"
+            :theme="{
+            primary: '#000',
+            secondary: '#21022fdf',
+            tertiary: '#000',
+            textColor: 'aqua',
+            textHoverColor: '#fc7a00c7',
+            }"
+        >
+        <template #link-icon>
+            <font-awesome-icon icon="feather-alt" size="lg" />
+        </template>
+        </DockMenu>
+    </template>
+
+
 </template>
 
 <script>
 import axios from 'axios';
 import { DockMenu } from "vue-dock-menu";
+import TouchMenu from './TouchMenu.vue';
 import "vue-dock-menu/dist/vue-dock-menu.css";
 import router from "../router";
 import { useStore } from 'vuex';
@@ -34,9 +42,9 @@ import {
 export default {
     name : 'NavMenu',
     components: {
-        DockMenu
+        DockMenu, TouchMenu
     },
-    props:{},
+    props:['touch'],
     emits: {
         'selected-topic' : 'selectedTopic'
     },
