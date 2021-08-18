@@ -40,7 +40,7 @@
             
         </nav>
     </header>
-    <main>
+    <main v-if="id_pagina >= 0 && id_pagina < list.length">
         
         <nav class="menuPage">
             <list-topic :name="title" :menu="list" :nameMenuBar="nameItemMenu"  />
@@ -73,31 +73,34 @@
             <img style='height: 90%; width: 90%; object-fit: contain' src="note.jpg" />
         </section>
     </main>
+    <section v-else>
+        <img style='height: 90%; width: 90%; object-fit: contain' src="note.jpg" />
+    </section>
 
     <nav v-if="window.y > window.height">
-            <div v-if="id_pagina > 0" @click="onFirst()" class="buttonNav">
-                <font-awesome-icon icon="angle-double-left"/>
-            </div>
-            <div v-else class="buttonNav" />
+        <div v-if="id_pagina > 0" @click="onFirst()" class="buttonNav">
+            <font-awesome-icon icon="angle-double-left"/>
+        </div>
+        <div v-else class="buttonNav" />
 
-            <div v-if="id_pagina > 0" @click="onPrevious()" class="buttonNav">
-                <font-awesome-icon icon="angle-left"/>
-            </div>
-            <div v-else class="buttonNav" />
+        <div v-if="id_pagina > 0" @click="onPrevious()" class="buttonNav">
+            <font-awesome-icon icon="angle-left"/>
+        </div>
+        <div v-else class="buttonNav" />
 
-            <div class="indexPageNav"> pag. <input size="3"  @change="onChange" :value="Number(id_pagina) +1" /></div>
-            
-            <div v-if="id_pagina < list.length-1" @click="onNext()" class="buttonNav">
-                <font-awesome-icon icon="angle-right"/>
-            </div>
-            <div v-else class="buttonNav" />
+        <div class="indexPageNav"> pag. <input size="3"  @change="onChange" :value="Number(id_pagina) +1" /></div>
+        
+        <div v-if="id_pagina < list.length-1" @click="onNext()" class="buttonNav">
+            <font-awesome-icon icon="angle-right"/>
+        </div>
+        <div v-else class="buttonNav" />
 
-            <div v-if="id_pagina < list.length-1" @click="onLast()" class="buttonNav">
-                <font-awesome-icon icon="angle-double-right"/>
-            </div>
-            <div v-else class="buttonNav" />
-            
-        </nav>
+        <div v-if="id_pagina < list.length-1" @click="onLast()" class="buttonNav">
+            <font-awesome-icon icon="angle-double-right"/>
+        </div>
+        <div v-else class="buttonNav" />
+        
+    </nav>
     
 </template>
 
@@ -117,7 +120,6 @@ export default {
     name: 'MultiPages',
     props:[
       'id_menu',
-      'id_argomento',
       'id_pagina'
     ],
     components: {
@@ -332,7 +334,6 @@ export default {
             [() => store.getters.isBuild],
             () =>{
                 store.dispatch('CURRENT_TOPIC', {
-                    name : props.id_argomento, 
                     page : props.id_pagina,
                     menu : props.id_menu
                 });
@@ -345,7 +346,6 @@ export default {
          */
         watch(
             [
-                () => props.id_argomento,
                 () => props.id_pagina,
                 () => props.id_menu,
             ],
@@ -365,11 +365,9 @@ export default {
                 data.list=store.getters.listPages;
 
             if(store.getters.titleMenuBar)
-                data.nameItemMenu=store.getters.titleMenuBar;
+                data.title = store.getters.titleMenuBar;
+                data.nameItemMenu = store.getters.titleMenuBar;
 
-            if(store.getters.title)
-                data.title=store.getters.title;
-    
             if(store.getters.titlePage)
                 data.titlePage=store.getters.titlePage;
 
@@ -417,9 +415,8 @@ export default {
         function toNav(index){
             var audio = new Audio("/sonar.ogg");
             audio.play();
-            router.push(`/menu/${data.nameItemMenu}/argomento/${data.title}/pagina/${index}`);
+            router.push(`/menu/${data.nameItemMenu}/pagina/${index}`);
             store.dispatch('CURRENT_TOPIC', {
-                name : data.title, 
                 page : index,
                 menu : data.nameItemMenu
             });
@@ -486,10 +483,11 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Geostar+Fill&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Gruppo&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poller+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');;
 
 @import url('https://fonts.googleapis.com/css2?family=Stint+Ultra+Expanded&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Bowlby+One+SC&display=swap');
 
 
 
@@ -537,7 +535,7 @@ export default {
 /* dynamic */
 h1{
     text-align: center;
-    font-family: 'Poller One', cursive;
+    font-family: 'Bowlby One SC', cursive;
     font-weight: normal;
     color: black;
     text-shadow: 0 0 10px rgb(0, 255, 242);
@@ -674,7 +672,7 @@ main{
 .indexPageNav{
     vertical-align: top;
     display: inline-block;
-    min-width: 11rem;
+    min-width: auto;
     height: v-bind("style.button.size");
     font-family: 'Geostar Fill', cursive;
     font-size: v-bind("style.page.text");
@@ -716,6 +714,14 @@ main{
 }
 .buttonNav:active{
     color:red;
+}
+
+
+/* stili */
+
+.tecnico{
+    font-family: 'Michroma', sans-serif;
+    font-size: calc(v-bind("style.page.text") - 30%);
 }
 
 

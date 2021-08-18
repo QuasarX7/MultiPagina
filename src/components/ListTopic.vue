@@ -22,10 +22,9 @@ export default {
         function onSelectItem(index){
             var audio = new Audio("/sonar.ogg");
             audio.play();
-            router.push(`/menu/${props.nameMenuBar}/argomento/${props.name}/pagina/${index}`);
+            router.push(`/menu/${props.nameMenuBar}/pagina/${index}`);
             store.dispatch(
                 'CURRENT_TOPIC', {
-                    name : props.name, 
                     page : index, 
                     menu: props.nameMenuBar
             });

@@ -23,10 +23,9 @@ export default {
             if(item['titolo'] && item['sotto-titolo'] && item['etichetta'])
             var audio = new Audio("/sonar.ogg");
             audio.play();
-            router.push(`/menu/${item['etichetta'].toLocaleLowerCase()}/argomento/${item['titolo']}/pagina/${item['id']}`);
+            router.push(`/menu/${item['etichetta'].toLocaleLowerCase()}/pagina/${item['id']}`);
             store.dispatch(
                 'CURRENT_TOPIC', {
-                    name : item['titolo'], 
                     page : item['id'], 
                     menu:  String(item['etichetta']).toLocaleLowerCase()
             });

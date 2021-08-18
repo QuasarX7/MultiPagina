@@ -3,7 +3,6 @@ import { createStore } from "vuex";
 const storeConfig = {
     state: {
         dataTopic: [],
-        currentTopic: '',
         currentPage: 0,
         currentMenu: '',
         load: true
@@ -14,9 +13,6 @@ const storeConfig = {
         },
         SET_TOPIC(state,data) {
             state.dataTopic[data.key] = data.infoPages;
-        },
-        SET_CURRENT_TOPIC(state,topic) {
-            state.currentTopic = topic;
         },
         SET_CURRENT_PAGE(state,page) {
             state.currentPage = page;
@@ -40,7 +36,6 @@ const storeConfig = {
         },
 
         CURRENT_TOPIC({ commit }, topic) {
-            commit('SET_CURRENT_TOPIC', topic.name);
             commit('SET_CURRENT_PAGE', topic.page);
             commit('SET_CURRENT_MENU', topic.menu);
         },
@@ -52,9 +47,6 @@ const storeConfig = {
         },
         titleMenuBar(state) {
             return state.currentMenu;
-        },
-        title(state) {
-            return state.currentTopic;
         },
         topics(state) {
             return state.dataTopic;

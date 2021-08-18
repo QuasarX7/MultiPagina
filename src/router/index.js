@@ -9,7 +9,7 @@ const routes = [
         component: MultiPages
     },
     {
-        path: '/menu/:id_menu/argomento/:id_argomento/pagina/:id_pagina',
+        path: '/menu/:id_menu/pagina/:id_pagina',
         name: 'Argomento',
         component: MultiPages,
         props: true,
@@ -34,12 +34,7 @@ const routes = [
         path: "/:allOtherPaths(.*)*",
         name: "not-found",
         component: NotFound
-    },
-    {
-        path: "/:allOtherPaths(.*)*",
-        name: "not-found",
-        component: NotFound
-    },
+    }
 
 ];
 

@@ -68,11 +68,10 @@ export default {
                 var itemsMenu =String(oData.path).split('>');
                 if(itemsMenu.length){
                     var topic = itemsMenu[itemsMenu.length-1];//titolo menu
-                    router.push(`/menu/${topic}/argomento/${data.topics[topic]['titolo']}/pagina/0`);
+                    router.push(`/menu/${topic}/pagina/0`);
                     var audio = new Audio("/sonar.ogg");
                     audio.play();
                     store.dispatch('CURRENT_TOPIC', {
-                        name : data.topics[topic]['titolo'], 
                         page : 0,
                         menu : topic
                     });
