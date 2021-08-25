@@ -489,7 +489,7 @@ export default {
 
 @import url('https://fonts.googleapis.com/css2?family=Bowlby+One+SC&display=swap');
 
-
+@import url('https://fonts.googleapis.com/css2?family=Fuggles&family=Indie+Flower&display=swap');
 
 
 /* animazione */
@@ -723,6 +723,34 @@ main{
     font-family: 'Michroma', sans-serif;
     font-size: calc(v-bind("style.page.text") - 30%);
 }
+
+.appunti p em{
+    font-family: 'Indie Flower', cursive;
+}
+.appunti p b{
+    color: red;
+}
+
+
+.appunti i{
+    font-size: 2.5rem;
+    font-family: 'Fuggles', cursive;
+}
+
+.appunti ul li{
+    display: block;
+    width: 100%;
+    float: right;
+    list-style-type:circle;
+    margin-bottom: 1.2rem;
+    
+}
+
+.appunti ul img{
+    padding: 1rem;
+}
+
+
 
 
 </style>
