@@ -47,7 +47,12 @@
         </nav>
         <section v-if="pageFile" class="areaMain">
             <!-- area pagina -->
-            <article class ="page" v-html="pageFile" />
+            <template v-if="dictionary">
+                <translate class ="page" :language="dictionary" :page="pageFile" />
+            </template>
+            <template v-else>
+                <article class ="page" v-html="pageFile" />
+            </template>
 
             <!-- area note -->
             <article class ="note" ><p style="color:red; padding:1rem">Attenzione: sito è in fase di costruzione!</p></article>
@@ -113,6 +118,7 @@ import { useStore } from 'vuex'
 import axios from 'axios'
 import router from "../router"
 import PageLinks from '../components/PageLinks.vue'
+import Translate from '../components/Translate.vue'
 
 
 
@@ -126,7 +132,9 @@ export default {
         'nav-menu' : NavMenu,
         'list-topic' : ListTopic,
         'view-slides': Slides,
-        'page-links': PageLinks
+        'page-links': PageLinks,
+        'translate': Translate
+        
     },
     setup(props) {
         const store = useStore();
@@ -134,6 +142,7 @@ export default {
        
 
         let data = reactive({
+            dictionary : null,
             title : '',
             titlePage : '',
             list : [],
@@ -370,9 +379,14 @@ export default {
 
             if(store.getters.titlePage)
                 data.titlePage=store.getters.titlePage;
-
+            
+            data.dictionary = null;
             if(store.getters.file){
+                if(store.getters.language){
+                    loadDictionary(store.getters.language, store.getters.file);
+                }
                 loadFilePage(store.getters.file);
+                
                 data.slides = [];
             }else if(Array.isArray(store.getters.imageList)){
                 data.slides = store.getters.imageList;
@@ -404,6 +418,34 @@ export default {
                 }
             });          
         }
+
+        /**
+         * Carica un dizionario per la traduzione del file.
+         * 
+         * @param {string} language file txt contenente il dizionario
+         */
+        function loadDictionary(language){
+            axios.get(`${window.location.origin}/${language}`).then(response => {
+                if(response){
+                    if(response.data){
+                        var rows = String(response.data).split('\n');
+                        data.dictionary = [];
+                        rows.forEach(line => {
+                            let word = line.split(/\s/).filter((w)=> w != "" );
+                            data.dictionary.push({
+                                word :          word[0],
+                                description:    word[1],
+                                type:           word[2],
+                                phonetics:      word[3]
+                            });
+                        });
+                    }
+                }
+            });  
+                  
+        }
+
+
 
         function onPrevious(){
             var index = props.id_pagina - 1;
@@ -749,6 +791,8 @@ main{
 .appunti ul img{
     padding: 1rem;
 }
+
+
 
 
 

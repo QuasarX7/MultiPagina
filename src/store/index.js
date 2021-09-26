@@ -75,6 +75,13 @@ const storeConfig = {
                 e;
             }
         },
+        language(state) {
+            try {
+                return state.dataTopic[state.currentMenu]['pagine'][state.currentPage]["lingua"];
+            } catch (e) {
+                e;
+            }
+        },
         imageList(state) {
              try {
                 return state.dataTopic[state.currentMenu]['pagine'][state.currentPage]["diapositive"];
