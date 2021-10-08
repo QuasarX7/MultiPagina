@@ -47,7 +47,10 @@
         </nav>
         <section v-if="pageFile" class="areaMain">
             <!-- area pagina -->
-            <template v-if="dictionary">
+            <template v-if="pageDictionary">
+                <page-dictionary class ="page" :index="id_pagina" :items="dictionary" />
+            </template>
+            <template v-else-if="dictionary">
                 <translate class ="page" :language="dictionary" :page="pageFile" />
             </template>
             <template v-else>
@@ -74,11 +77,16 @@
                 <page-links :list="links" />
             </article>
         </section>
-        <section v-else>
-            <img style='height: 90%; width: 90%; object-fit: contain' src="note.jpg" />
+        <section v-else class="areaMain">
+            <div class="error">
+                <span>Errore 404 </span>
+                <font-awesome-icon icon="bomb" size="2x" />
+                <p>pagina non trovata</p>
+            </div>
         </section>
     </main>
     <section v-else>
+        <!-- accesso senza parametri (primo accesso al sito) -->
         <img style='height: 90%; width: 90%; object-fit: contain' src="note.jpg" />
     </section>
 
@@ -113,12 +121,15 @@
 import NavMenu from '../components/NavMenu.vue'
 import ListTopic from '../components/ListTopic.vue'
 import Slides from '../components/Slides.vue'
-import {reactive, toRefs, onMounted,  watch, computed} from 'vue'
 import { useStore } from 'vuex'
 import axios from 'axios'
 import router from "../router"
 import PageLinks from '../components/PageLinks.vue'
 import Translate from '../components/Translate.vue'
+import Dictionary from '../components/Dictionary.vue'
+
+
+import {reactive, toRefs, onMounted,  watch, computed} from 'vue'
 
 
 
@@ -133,7 +144,8 @@ export default {
         'list-topic' : ListTopic,
         'view-slides': Slides,
         'page-links': PageLinks,
-        'translate': Translate
+        'translate': Translate,
+        'page-dictionary' : Dictionary
         
     },
     setup(props) {
@@ -142,6 +154,7 @@ export default {
        
 
         let data = reactive({
+            pageDictionary : false,
             dictionary : null,
             title : '',
             titlePage : '',
@@ -366,7 +379,8 @@ export default {
 
         
         /**
-         * Inizializza e caricamento della pagina
+         * Inizializza e caricamento della pagina, utilizzando i dati presenti nella memoria 
+         * condivisa "store"
          */
         function init(){
     
@@ -381,15 +395,37 @@ export default {
                 data.titlePage=store.getters.titlePage;
             
             data.dictionary = null;
-            if(store.getters.file){
+            data.pageDictionary = false;
+            if(store.getters.dictionary){
+                loadDictionary(
+                    store.getters.dictionary,
+                    (dictionary) => {
+                        data.pageDictionary = true;
+                        // inizializzazione menu di pagina
+                        data.list = [];
+                        dictionary.forEach((item)=>{
+                            data.list.push({
+                                'sotto-titolo' : item['word']
+                            });
+                        });
+                        data.list.reverse();
+                        //titolo
+                        if(Number(props.id_pagina) < data.list.length){
+                            data.titlePage = data.list[props.id_pagina]['sotto-titolo'];
+                        }
+                    }
+                );
+            }else if(store.getters.file){
                 if(store.getters.language){
-                    loadDictionary(store.getters.language, store.getters.file);
+                    loadDictionary(store.getters.language);
                 }
                 loadFilePage(store.getters.file);
                 
                 data.slides = [];
             }else if(Array.isArray(store.getters.imageList)){
                 data.slides = store.getters.imageList;
+                data.pageFile = null;
+            }else{
                 data.pageFile = null;
             }
 
@@ -423,8 +459,9 @@ export default {
          * Carica un dizionario per la traduzione del file.
          * 
          * @param {string} language file txt contenente il dizionario
+         * @param {function} success funzione eseguita in caso di successo, ha come parametro i dati del dizionario
          */
-        function loadDictionary(language){
+        function loadDictionary(language,success){
             axios.get(`${window.location.origin}/${language}`).then(response => {
                 if(response){
                     if(response.data){
@@ -436,9 +473,13 @@ export default {
                                 word :          word[0],
                                 description:    word[1],
                                 type:           word[2],
-                                phonetics:      word[3]
+                                phonetics:      word[3],
+                                path: language.substring(0,language.lastIndexOf('/'))
                             });
                         });
+                        if(success){
+                            success(data.dictionary);
+                        }
                     }
                 }
             });  
@@ -585,6 +626,7 @@ h1{
 }
 
 .titleSearch{
+    padding-left: 5rem;
     text-shadow: 0 0 3px rgb(0, 255, 242);
     font-family: 'Gruppo', cursive;
     text-align: center;
@@ -792,7 +834,20 @@ main{
     padding: 1rem;
 }
 
+.areaMain .error{
+    color: rgb(77, 1, 1);
+    text-shadow: 0 0 3px rgb(255, 123, 0);
+    font-family: 'Geostar Fill', cursive;
+    padding: 1rem;
+    margin: 1rem;
+    font-size:  v-bind("style.title.size");
+}
 
+.areaMain .error p{
+    font-family: 'Michroma', sans-serif;
+    padding: 1rem;
+    font-size:  v-bind("style.page.text");
+}
 
 
 

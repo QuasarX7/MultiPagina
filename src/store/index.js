@@ -54,6 +54,13 @@ const storeConfig = {
         topic(state) {
             return state.dataTopic[state.currentMenu];
         },
+        dictionary(state){
+            try {
+                return state.dataTopic[state.currentMenu]["dizionario"];
+            } catch (e) {
+                e;
+            }
+        },
         listPages(state) {
             try {
                 return state.dataTopic[state.currentMenu]['pagine'];

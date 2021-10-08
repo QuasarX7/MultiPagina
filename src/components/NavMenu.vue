@@ -1,3 +1,13 @@
+<!--                                    *************************
+                                        *    Menu Principale    *
+                                        *************************
+
+     Componente che rappresenta il menu di navigazione principale, esso effettua anche il caricamento del file
+     json di configurazione "argomenti" che descrive il comportamento e il funzionamento dell' App. Oltre ad
+     Inizializzare i campi del menu, va anche a salvare le informazioni principali del fine json nella memoria
+     condivisa "store".
+
+-->
 <template>
     <template v-if="touch" >
         <TouchMenu style="margin-top:-60px" :items="items" @on-selected="handleSelected" />
