@@ -237,6 +237,15 @@ export default {
                             () => '1.0rem'
                         );
                     }),
+                    line : computed(() => {
+                        return screen(
+                            () => '2rem',
+                            () => '2rem',
+                            () => '1.8rem',
+                            () => '1.7rem',
+                            () => '1.5rem'
+                        );
+                    }),
                 },
                 img : {
                     length : computed(() => {
@@ -673,6 +682,12 @@ nav.menuPage{
     font-family: 'Gruppo', cursive;
     font-size: v-bind("style.page.text");
     text-align: justify;
+    line-height: v-bind("style.page.line");
+}
+
+.page code{
+    font-family:'Courier New', Courier, monospace;
+    font-size: calc(0.8 * v-bind("style.page.text"));
 }
 
 
@@ -694,6 +709,7 @@ nav.menuPage{
 .page img{
     max-width: v-bind("style.img.length");
     margin: 1rem;
+    padding: 1rem 0;
     float: v-bind("style.img.align");
 }
 .contenuto-centrato{
@@ -715,6 +731,8 @@ nav.menuPage{
 
 .page img.estesa{
     float: none;
+    display: block;
+    margin: 0 auto;
 }
 
 .note{

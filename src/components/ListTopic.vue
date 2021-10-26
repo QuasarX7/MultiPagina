@@ -44,7 +44,7 @@ nav{
 }
 nav ul{
     background-color: rgb(255, 255, 255);
-    color: white;
+    color: #7ed7e6;
     font-family: 'Orbitron', sans-serif;
     list-style-type: none;
     margin-right: 0.5rem;
@@ -56,10 +56,10 @@ nav ul{
 nav ul > li{
     display: block;
     margin: 2px;
-    padding: 0.7rem;
-    list-style-position:inside;
-    border: 1px solid black;
-    background-color: rgb(0, 68, 85);
+    padding: .7rem;
+    list-style-position: inside;
+    border: 1px solid #7ed7e6;
+    background-color: #000;
     cursor: pointer;
 }
 nav ul > li:hover{
